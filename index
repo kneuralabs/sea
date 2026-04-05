@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEA™ — Supplier Evaluation Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0b1120;
+  --navy2: #111827;
+  --navy3: #1a2540;
+  --navy4: #243056;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8eaf2;
+  --muted: #7c839c;
+  --accent: #4f8ef7;
+  --accent2: #3a6fd4;
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.12);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --mono: 'DM Mono', monospace;
+  --serif: 'Fraunces', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body { background: var(--navy); color: var(--text); font-family: var(--sans); font-weight: 300; min-height: 100vh; }
+
+/* ── LAYOUT ── */
+.app { display: grid; grid-template-rows: 56px 1fr; min-height: 100vh; }
+header { background: var(--navy2); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; gap: 16px; position: sticky; top: 0; z-index: 100; }
+.logo { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -.02em; }
+.logo span { color: var(--accent); }
+.logo sup { font-size: 9px; color: var(--muted); vertical-align: super; margin-left: 1px; }
+.header-sep { flex: 1; }
+.header-tag { font-family: var(--mono); font-size: 10px; color: var(--muted); background: var(--navy3); border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; }
+main { padding: 32px 28px; max-width: 980px; margin: 0 auto; width: 100%; }
+
+/* ── SCREENS ── */
+.screen { display: none; animation: fadeUp .3s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── HOME ── */
+.home-hero { margin-bottom: 40px; }
+.home-hero h1 { font-family: var(--serif); font-size: 38px; font-weight: 300; line-height: 1.15; margin-bottom: 10px; }
+.home-hero h1 em { font-style: italic; color: var(--accent); }
+.home-hero p { color: var(--muted); font-size: 15px; max-width: 520px; line-height: 1.6; }
+.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+.home-card { background: var(--navy2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: border-color .2s, background .2s; position: relative; overflow: hidden; }
+.home-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent) 0%, transparent 60%); opacity: 0; transition: opacity .2s; }
+.home-card:hover { border-color: var(--accent2); background: var(--navy3); }
+.home-card:hover::before { opacity: .04; }
+.home-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.card-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--navy3); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.card-arrow { color: var(--accent); font-size: 18px; opacity: 0; transform: translateX(-4px); transition: all .2s; }
+.card-fn { font-size: 13px; font-weight: 400; margin-bottom: 4px; color: var(--text); }
+.card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.card-count { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 10px; }
+.past-evals { background: var(--navy2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.section-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
+.eval-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--navy3); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: background .15s; border: 1px solid transparent; }
+.eval-row:hover { border-color: var(--border2); background: var(--navy4); }
+.eval-fn-badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; background: var(--navy4); color: var(--muted); font-family: var(--mono); }
+.eval-name { font-size: 13px; flex: 1; }
+.eval-date { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.signal-pill { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 20px; font-family: var(--mono); }
+.pill-proceed { background: var(--green-bg); color: var(--green); }
+.pill-hold { background: var(--amber-bg); color: var(--amber); }
+.pill-reject { background: var(--red-bg); color: var(--red); }
+.empty-state { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+
+/* ── INTERVIEW ── */
+.interview-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.back-btn { background: var(--navy3); border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; font-family: var(--sans); transition: all .15s; }
+.back-btn:hover { color: var(--text); border-color: var(--border2); }
+.interview-fn { font-family: var(--serif); font-size: 22px; font-weight: 300; }
+.vendor-setup { background: var(--navy2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.vendor-setup h3 { font-size: 14px; font-weight: 400; color: var(--muted); margin-bottom: 16px; font-family: var(--mono); letter-spacing: .06em; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.field input, .field select { background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 14px; font-family: var(--sans); outline: none; transition: border-color .15s; }
+.field input:focus, .field select:focus { border-color: var(--accent2); }
+.field input::placeholder { color: var(--muted); }
+.field select option { background: var(--navy2); }
+.start-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 11px 24px; font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: background .15s; }
+.start-btn:hover { background: var(--accent2); }
+.start-btn:disabled { background: var(--navy4); color: var(--muted); cursor: not-allowed; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar { background: var(--navy3); border-radius: 4px; height: 4px; margin-bottom: 24px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+.progress-meta { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+/* ── LIVE HEATMAP MINI ── */
+.live-heat { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+.lh-cell { flex: 1; min-width: 70px; border-radius: 8px; padding: 8px; background: var(--navy3); border: 1px solid var(--border); transition: all .3s; text-align: center; }
+.lh-cell.green { background: var(--green-bg); border-color: rgba(34,197,94,.3); }
+.lh-cell.amber { background: var(--amber-bg); border-color: rgba(245,158,11,.3); }
+.lh-cell.red { background: var(--red-bg); border-color: rgba(239,68,68,.3); }
+.lh-name { font-size: 9px; color: var(--muted); font-family: var(--mono); margin-bottom: 4px; line-height: 1.3; }
+.lh-score { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--text); }
+.lh-cell.green .lh-score { color: var(--green); }
+.lh-cell.amber .lh-score { color: var(--amber); }
+.lh-cell.red .lh-score { color: var(--red); }
+
+/* ── CATEGORY SECTION ── */
+.cat-section { background: var(--navy2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+.cat-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.cat-num { font-family: var(--mono); font-size: 11px; color: var(--muted); width: 20px; }
+.cat-title { font-size: 15px; flex: 1; }
+.cat-weight { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.cat-rag { width: 10px; height: 10px; border-radius: 50%; background: var(--navy4); transition: background .3s; }
+.cat-rag.green { background: var(--green); }
+.cat-rag.amber { background: var(--amber); }
+.cat-rag.red { background: var(--red); }
+.gate-tag { font-size: 9px; background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.3); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); }
+.cat-body { padding: 20px; }
+.question-block { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.question-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.q-text { font-size: 14px; line-height: 1.6; margin-bottom: 6px; }
+.q-help { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; font-style: italic; }
+.q-type-badge { display: inline-block; font-size: 9px; font-family: var(--mono); padding: 2px 6px; border-radius: 4px; margin-bottom: 8px; }
+.q-gate { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
+.q-rating { background: rgba(79,142,247,.1); color: var(--accent); border: 1px solid rgba(79,142,247,.2); }
+.q-note { background: var(--navy3); color: var(--muted); border: 1px solid var(--border); }
+
+/* Yes/No toggle */
+.yn-group { display: flex; gap: 8px; }
+.yn-btn { padding: 9px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--navy3); color: var(--muted); font-size: 13px; font-family: var(--sans); cursor: pointer; transition: all .15s; }
+.yn-btn:hover { border-color: var(--border2); color: var(--text); }
+.yn-btn.selected-yes { background: var(--green-bg); border-color: rgba(34,197,94,.4); color: var(--green); }
+.yn-btn.selected-no { background: var(--red-bg); border-color: rgba(239,68,68,.4); color: var(--red); }
+
+/* Rating */
+.rating-group { display: flex; gap: 8px; }
+.r-btn { width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--border); background: var(--navy3); color: var(--muted); font-family: var(--mono); font-size: 16px; cursor: pointer; transition: all .15s; }
+.r-btn:hover { border-color: var(--border2); color: var(--text); }
+.r-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rating-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-top: 6px; font-family: var(--mono); }
+
+/* Textarea */
+.q-textarea { width: 100%; background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 13px; font-family: var(--sans); resize: vertical; min-height: 80px; outline: none; transition: border-color .15s; line-height: 1.5; }
+.q-textarea:focus { border-color: var(--accent2); }
+.q-textarea::placeholder { color: var(--muted); }
+
+/* Nav controls */
+.nav-controls { display: flex; gap: 12px; margin-top: 24px; }
+.nav-btn { padding: 11px 24px; border-radius: 8px; border: 1px solid var(--border); background: var(--navy3); color: var(--text); font-size: 14px; font-family: var(--sans); cursor: pointer; transition: all .15s; }
+.nav-btn:hover { border-color: var(--border2); }
+.nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.nav-btn.primary:hover { background: var(--accent2); }
+.gate-alert { background: var(--red-bg); border: 1px solid rgba(239,68,68,.3); border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 13px; color: var(--red); display: none; }
+
+/* Overall note */
+.overall-note { background: var(--navy2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.overall-note label { font-size: 12px; color: var(--muted); font-family: var(--mono); display: block; margin-bottom: 10px; }
+
+/* ── RESULTS ── */
+.results-header { margin-bottom: 28px; }
+.vendor-badge { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.results-vendor { font-family: var(--serif); font-size: 30px; font-weight: 300; margin-bottom: 4px; }
+.results-fn { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+.signal-banner { border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; border: 1px solid; }
+.signal-banner.proceed { background: var(--green-bg); border-color: rgba(34,197,94,.3); }
+.signal-banner.hold { background: var(--amber-bg); border-color: rgba(245,158,11,.3); }
+.signal-banner.reject { background: var(--red-bg); border-color: rgba(239,68,68,.3); }
+.signal-icon { font-size: 28px; }
+.signal-label { font-family: var(--serif); font-size: 22px; font-weight: 600; }
+.signal-banner.proceed .signal-label { color: var(--green); }
+.signal-banner.hold .signal-label { color: var(--amber); }
+.signal-banner.reject .signal-label { color: var(--red); }
+.signal-reason { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+/* Heatmap grid */
+.heatmap-full { display: grid; grid-template-columns: repeat(7,1fr); gap: 10px; margin-bottom: 24px; }
+.hm-cell { border-radius: 10px; padding: 14px 10px; text-align: center; border: 1px solid transparent; position: relative; }
+.hm-cell.green { background: var(--green-bg); border-color: rgba(34,197,94,.25); }
+.hm-cell.amber { background: var(--amber-bg); border-color: rgba(245,158,11,.25); }
+.hm-cell.red { background: var(--red-bg); border-color: rgba(239,68,68,.25); }
+.hm-cat { font-size: 10px; color: var(--muted); font-family: var(--mono); margin-bottom: 8px; line-height: 1.4; }
+.hm-score { font-family: var(--mono); font-size: 26px; font-weight: 500; margin-bottom: 4px; }
+.hm-cell.green .hm-score { color: var(--green); }
+.hm-cell.amber .hm-score { color: var(--amber); }
+.hm-cell.red .hm-score { color: var(--red); }
+.hm-rag { font-size: 9px; font-weight: 500; font-family: var(--mono); }
+.hm-cell.green .hm-rag { color: var(--green); }
+.hm-cell.amber .hm-rag { color: var(--amber); }
+.hm-cell.red .hm-rag { color: var(--red); }
+.hm-bar-track { height: 3px; background: rgba(255,255,255,.08); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.hm-bar-fill { height: 100%; border-radius: 2px; }
+.hm-cell.green .hm-bar-fill { background: var(--green); }
+.hm-cell.amber .hm-bar-fill { background: var(--amber); }
+.hm-cell.red .hm-bar-fill { background: var(--red); }
+.gate-flag { position: absolute; top: 6px; right: 6px; font-size: 8px; background: var(--red); color: #fff; padding: 1px 4px; border-radius: 3px; font-family: var(--mono); }
+
+/* Category breakdown */
+.cat-breakdown { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.cb-row { background: var(--navy2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+.cb-rag { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.cb-rag.green { background: var(--green); }
+.cb-rag.amber { background: var(--amber); }
+.cb-rag.red { background: var(--red); }
+.cb-name { font-size: 13px; flex: 1; }
+.cb-note { font-size: 12px; color: var(--muted); max-width: 320px; text-align: right; font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cb-score { font-family: var(--mono); font-size: 16px; font-weight: 500; min-width: 40px; text-align: right; }
+.cb-row.green .cb-score { color: var(--green); }
+.cb-row.amber .cb-score { color: var(--amber); }
+.cb-row.red .cb-score { color: var(--red); }
+
+/* Actions */
+.result-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.action-btn { padding: 11px 22px; border-radius: 8px; border: 1px solid var(--border); background: var(--navy3); color: var(--text); font-size: 14px; font-family: var(--sans); cursor: pointer; transition: all .15s; }
+.action-btn:hover { border-color: var(--border2); background: var(--navy4); }
+.action-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.action-btn.primary:hover { background: var(--accent2); }
+.action-btn.contract { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,.4); color: var(--green); }
+.action-btn.contract:hover { background: rgba(34,197,94,0.25); }
+
+@media (max-width: 680px) {
+  .home-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .heatmap-full { grid-template-columns: repeat(4,1fr); }
+  .live-heat { gap: 4px; }
+  .hm-score { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">SEA<sup>™</sup> <span style="font-size:13px;font-weight:300;color:var(--muted);margin-left:4px;">Supplier Evaluation Assessment</span></div>
+    <div class="header-sep"></div>
+    <!-- Live score bar — visible only during active interview -->
+    <div id="header-score-bar" style="display:none;align-items:center;gap:10px;">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);" id="header-vendor-label"></div>
+      <div style="display:flex;gap:4px;align-items:center;" id="header-cat-pills"></div>
+      <div style="width:1px;height:18px;background:var(--border);margin:0 4px;"></div>
+      <div style="display:flex;align-items:baseline;gap:3px;">
+        <span style="font-family:var(--mono);font-size:18px;font-weight:500;" id="header-total-score">—</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">/100</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;" id="header-signal-pill"></div>
+    </div>
+    <div class="header-tag">VENDOR EVALUATOR v2.0</div>
+  </header>
+  <main>
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="home-hero">
+        <h1>Evaluate suppliers with<br><em>precision and structure.</em></h1>
+        <p>Know exactly who you're signing before you sign. Structured vendor interviews, live scoring, and a ready-to-execute contract — all in one place.</p>
+      </div>
+      <div class="section-label">Select a function to begin</div>
+      <div class="home-grid" id="function-grid"></div>
+      <div class="past-evals">
+        <div class="section-label">Past evaluations</div>
+        <div id="past-list"></div>
+      </div>
+    </div>
+
+    <!-- INTERVIEW -->
+    <div class="screen" id="screen-interview">
+      <div class="interview-header">
+        <button class="back-btn" onclick="goHome()">← Back</button>
+        <div class="interview-fn" id="interview-fn-title"></div>
+      </div>
+
+      <!-- Setup -->
+      <div class="vendor-setup" id="setup-panel">
+        <h3>Vendor details</h3>
+        <div class="field-row">
+          <div class="field"><label>Vendor name *</label><input type="text" id="vendor-name" placeholder="e.g. Apex HR Solutions"></div>
+          <div class="field"><label>Primary contact</label><input type="text" id="vendor-contact" placeholder="Name / email"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Interview date</label><input type="date" id="interview-date"></div>
+          <div class="field"><label>Evaluator name</label><input type="text" id="evaluator-name" placeholder="Your name"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Your Company Name</label><input type="text" id="company-name" placeholder="e.g. Acme Corp LLC"></div>
+          <div class="field"><label>Contract Value / Scope</label><input type="text" id="contract-scope" placeholder="e.g. $24,000/year payroll services"></div>
+        </div>
+        <button class="start-btn" id="start-btn" onclick="startInterview()" disabled>Start Interview →</button>
+      </div>
+
+      <!-- Active interview -->
+      <div id="interview-panel" style="display:none">
+        <div class="progress-meta">
+          <span id="progress-label">Category 1 of 7</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <div class="live-heat" id="live-heat"></div>
+        <div id="categories-container"></div>
+        <div class="overall-note" id="overall-note-block" style="display:none">
+          <label>Final evaluator note</label>
+          <textarea class="q-textarea" id="overall-note" placeholder="Summarise your overall impression of this supplier…" rows="3"></textarea>
+        </div>
+        <div class="nav-controls" id="nav-controls"></div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="screen" id="screen-results">
+      <div class="interview-header">
+        <button class="back-btn" onclick="goHome()">← Home</button>
+      </div>
+      <div class="results-header">
+        <div class="vendor-badge" id="res-badge"></div>
+        <div class="results-vendor" id="res-vendor"></div>
+        <div class="results-fn" id="res-fn"></div>
+      </div>
+      <div class="signal-banner" id="signal-banner">
+        <div class="signal-icon" id="signal-icon"></div>
+        <div><div class="signal-label" id="signal-label"></div><div class="signal-reason" id="signal-reason"></div></div>
+      </div>
+      <div class="section-label">Heatmap — layered view</div>
+      <div class="heatmap-full" id="heatmap-full"></div>
+      <div class="section-label">Category breakdown</div>
+      <div class="cat-breakdown" id="cat-breakdown"></div>
+      <div class="result-actions" id="result-actions">
+        <button class="action-btn primary" onclick="exportEvalPDF()">↓ Export Evaluation Card (PDF)</button>
+        <button class="action-btn" onclick="newEval()">+ New evaluation</button>
+        <button class="action-btn" onclick="goHome()">← All evaluations</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const FUNCTIONS = [
+  { id:'hr', name:'HR & Payroll', icon:'👥', desc:'Workforce management, payroll processing, employee relations' },
+  { id:'finance', name:'Finance & Accounting', icon:'📊', desc:'Bookkeeping, financial reporting, tax, audits' },
+  { id:'it', name:'IT & Tech Support', icon:'💻', desc:'Infrastructure, helpdesk, cybersecurity, system admin' },
+  { id:'legal', name:'Legal & Compliance', icon:'⚖️', desc:'Contracts, regulatory compliance, risk management' },
+  { id:'marketing', name:'Marketing', icon:'📣', desc:'Brand, campaigns, digital marketing, content, SEO' },
+  { id:'ops', name:'Operations / Admin', icon:'⚙️', desc:'Process management, facilities, vendor coordination' }
+];
+
+const CATEGORIES = [
+  { id:'financial', name:'Financial Stability', weight:15, gate:false, short:'Financial' },
+  { id:'compliance', name:'Compliance & Certifications', weight:20, gate:true, short:'Compliance' },
+  { id:'quality', name:'Service Quality & Track Record', weight:20, gate:false, short:'Quality' },
+  { id:'security', name:'Data Security & Privacy', weight:15, gate:true, short:'Security' },
+  { id:'scalability', name:'Scalability & Capacity', weight:10, gate:false, short:'Scalability' },
+  { id:'communication', name:'Communication & Governance', weight:10, gate:false, short:'Comms' },
+  { id:'cost', name:'Cost & Value', weight:10, gate:false, short:'Cost' },
+];
+
+// Core questions — function-agnostic, appear for every evaluation
+const CORE_QUESTIONS = {
+  financial: [
+    { id:'f1', type:'rating', text:'How would you rate the vendor\'s financial transparency — can they provide audited accounts, revenue data, or reference client base?', help:'1 = refused to share any financial information, 5 = full documentation provided proactively. A vendor unwilling to disclose basics is a red flag.' },
+    { id:'f2', type:'yn', text:'Has the vendor been in business for more than 2 years with a verifiable operational track record?', help:'Vendors under 2 years old carry significantly higher continuity risk. A No answer here should prompt deeper scrutiny on financials, references, and key-person dependency — and may be disqualifying for high-value or long-term engagements.' },
+    { id:'f3', type:'yn', text:'Can the vendor demonstrate they hold professional indemnity or liability insurance appropriate to their service scope?', help:'Insurance coverage signals both professionalism and a vendor\'s understanding of their own risk exposure. Request policy documentation, not just verbal confirmation.' },
+    { id:'f4', type:'note', text:'Notes on financial health, payment terms, ownership stability, or concerns:', help:'' },
+  ],
+  compliance: [
+    { id:'c1', type:'yn', text:'Does the vendor hold all licences and registrations legally required to operate in their specific function in your jurisdiction?', help:'Verify the specific licence type for their function. Operating without required licences creates direct liability for your company as the engaging party.', gate:true },
+    { id:'c2', type:'yn', text:'Will the vendor sign a Data Processing Agreement (DPA) covering all personal and financial data they will handle?', help:'A signed DPA is mandatory under most data protection regimes. Refusal to sign is an immediate disqualification — do not proceed without it.', gate:true },
+    { id:'c3', type:'yn', text:'Has the vendor had any regulatory sanctions, fines, or enforcement actions in the past 3 years?', help:'Ask explicitly and verify independently if possible. Undisclosed regulatory history is a trust and legal risk.', inverted:true },
+    { id:'c4', type:'rating', text:'Rate the overall maturity of their compliance posture — documented policies, certifications, and evidence of regular audits.', help:'1 = nothing documented and verbal assurances only, 5 = ISO or SOC 2 certified with regular third-party audits and published compliance reports.' },
+    { id:'c6', type:'yn', text:'Do they have a documented Modern Slavery and ethical supply chain policy — and can they confirm no forced, child, or trafficked labour is used in their direct operations or supply chain?', help:'Modern slavery disclosure is a legal requirement in many jurisdictions (UK Modern Slavery Act, Australian Modern Slavery Act, EU CSRD). Even where not mandatory, absence of a policy is increasingly a disqualifier for enterprise clients. Request the policy document and confirm it is reviewed annually.' },
+    { id:'c5', type:'note', text:'Note all certifications held (ISO 27001, SOC 2, GDPR, etc.) and expiry dates:', help:'' },
+  ],
+  quality: [
+    { id:'q1', type:'rating', text:'How strong is their verifiable track record — references, client tenure, and documented retention rates?', help:'Ask for 2–3 client references you can speak to directly. 5 = strong references provided, verified, and they volunteer performance data unprompted.' },
+    { id:'q2', type:'rating', text:'Rate the quality and enforceability of their SLA commitments — are they specific, measurable, and carry financial penalties for breach?', help:'1 = no SLAs defined or verbal only, 5 = detailed SLAs with specific metrics, breach penalties, and a proven adherence track record.' },
+    { id:'q3', type:'yn', text:'Can they provide documented case studies or references from businesses of comparable size and complexity to yours?', help:'References from much smaller or larger clients are not equivalent. Insist on comparable scope — it reveals their actual operating capability.' },
+    { id:'q4', type:'note', text:'Notes on client references gathered, SLA terms offered, and any quality red flags:', help:'' },
+  ],
+  security: [
+    { id:'s1', type:'yn', text:'Does the vendor store and process all client data in access-controlled, encrypted systems — not email, shared drives, or spreadsheets?', help:'Uncontrolled data handling is the most common security failure. Any vendor storing client data in email or unmanaged spreadsheets should be rejected.', gate:true },
+    { id:'s2', type:'yn', text:'Do they have a documented incident response plan and can they evidence how they have handled a security event in the past?', help:'Absence of an incident response plan is not just a compliance gap — it signals they have never seriously thought about security failure.' },
+    { id:'s3', type:'rating', text:'Rate the rigour of their access controls — role-based access, MFA enforcement, and documented user access review cycles.', help:'1 = shared logins and no formal access management, 5 = role-based access with MFA, quarterly access reviews, and a documented offboarding checklist.' },
+    { id:'s4', type:'note', text:'Security certifications, pen-test results, incident history, or concerns:', help:'' },
+  ],
+  scalability: [
+    { id:'sc1', type:'rating', text:'How capable is the vendor of scaling delivery if your requirements double within 12 months?', help:'1 = single-person operation with no documented growth plan, 5 = structured team with a defined scaling playbook and capacity headroom today.' },
+    { id:'sc2', type:'yn', text:'Do they use modern, cloud-based platforms and automation tooling that support scaling without proportional cost increases?', help:'Manual, people-heavy processes that cannot leverage automation are a cost and quality ceiling. Assess their tooling maturity explicitly.' },
+    { id:'sc3', type:'note', text:'Notes on team bench depth, tooling stack, or specific scaling constraints:', help:'' },
+  ],
+  communication: [
+    { id:'cm1', type:'rating', text:'How structured and committed is their reporting cadence — defined frequency, format, and a named point of contact?', help:'1 = no defined reporting structure and you chase for updates, 5 = committed reporting schedule, dedicated named POC, and documented escalation path.' },
+    { id:'cm2', type:'yn', text:'Do they provide a dedicated single point of contact (SPOC) and a clear escalation path to senior management?', help:'Absence of a defined escalation path is a governance failure. In a crisis, knowing who to call at 9pm matters.' },
+    { id:'cm3', type:'yn', text:'Will they commit to a formal quarterly business review (QBR) covering performance, risks, and roadmap?', help:'Vendors resistant to structured reviews are vendors resistant to accountability. This is a non-negotiable governance requirement for any strategic supplier.' },
+    { id:'cm4', type:'note', text:'Notes on communication style, reporting tools, and governance structure proposed:', help:'' },
+  ],
+  cost: [
+    { id:'ct1', type:'rating', text:'How transparent and itemised is their pricing model — can you see exactly what you are paying for and what triggers additional charges?', help:'1 = opaque all-inclusive pricing with no breakdown, 5 = fully itemised schedule with defined variable cost structure and zero hidden fees.' },
+    { id:'ct2', type:'yn', text:'Are there any lock-in clauses, automatic renewal terms, exit fees, or minimum commitment periods in their contract?', help:'Ask for the full contract before signing. Hidden lock-in and exit fees are the most common cause of vendor relationship failures.', inverted:true },
+    { id:'ct3', type:'yn', text:'Is the total cost of ownership (including onboarding, integration, training, and exit) clearly understood and agreed before contract?', help:'TCO is almost always higher than the headline service fee. A vendor that cannot or will not quantify TCO is setting you up for surprises.' },
+    { id:'ct4', type:'note', text:'Notes on pricing, contract flexibility, value-for-money assessment, and total cost of ownership:', help:'' },
+  ],
+};
+
+// Function-specific questions — layered on top of core questions
+const FN_QUESTIONS = {
+  hr: {
+    financial: [
+      { id:'hr_f1', type:'rating', text:'Rate the financial resilience of this HR/payroll vendor — do they have contingency staffing and a documented business continuity plan covering payroll deadlines?', help:'Payroll failure has direct employee and legal consequences. A vendor without a BCP for payroll continuity should be downgraded regardless of their core service quality.' },
+      { id:'hr_f2', type:'yn', text:'Can they demonstrate financial depth to cover payroll errors or statutory penalties on behalf of their clients if needed?', help:'Ask whether they carry employer\'s liability and PI insurance with limits adequate to cover a payroll run error. Request the policy schedule.' },
+    ],
+    compliance: [
+      { id:'hr_c1', type:'yn', text:'Is the vendor registered with all mandatory payroll authorities applicable to your jurisdiction (federal/state tax authorities, FICA, FUTA, etc.)?', help:'Verify registration numbers directly with the authority — verbal confirmation is insufficient. Non-registration creates direct tax liability for your company.', gate:true },
+      { id:'hr_c2', type:'yn', text:'Do they maintain a proactive statutory compliance calendar and can they demonstrate a zero-penalty filing track record for their clients?', help:'Ask for documented evidence of their compliance calendar and any client penalty history. A single missed filing deadline is a disqualifying signal.' },
+      { id:'hr_c3', type:'yn', text:'Do their staff handling payroll hold relevant payroll or HR certifications (CPP, PHR, SHRM-CP, or equivalent)?', help:'Certified professionals are significantly less likely to make compliance errors. An uncertified team processing payroll at scale is a structural risk.' },
+      { id:'hr_c4', type:'yn', text:'If any payroll processing, benefits administration, or HR tasks are performed by subcontractors, are those parties bound by the same compliance and confidentiality obligations as direct staff?', help:'Subcontracted payroll processing is a common and underscrutinised risk. Ask for the names of any subprocessors and confirm their compliance obligations are contractually equivalent to the primary vendor.' },
+    ],
+    quality: [
+      { id:'hr_q1', type:'rating', text:'Rate their error rate on payroll runs — do they self-audit before submission and can they evidence their accuracy metrics?', help:'Best-in-class payroll vendors target <0.1% error rates. Any vendor that cannot provide error-rate data should be treated as a quality risk.' },
+      { id:'hr_q2', type:'yn', text:'Do they handle multi-state or multi-entity payroll, and can they provide references for clients of equivalent complexity?', help:'Multi-state payroll compliance is materially more complex than single-state. Confirm live client examples, not just theoretical capability.' },
+      { id:'hr_q3', type:'yn', text:'Can they manage the full employee lifecycle — onboarding, benefits administration, termination, and COBRA — not just payroll processing?', help:'Fragmented HR vendors create handoff gaps. A vendor covering the full lifecycle reduces risk and administrative burden significantly.' },
+    ],
+    security: [
+      { id:'hr_s1', type:'yn', text:'Is all payroll and employee data stored in a SOC 2-compliant HRMS with role-based access, audit logs, and MFA — not spreadsheets or email?', help:'Payroll data is among the most sensitive data a business handles. Any spreadsheet-based or email-based handling is an automatic rejection criterion.', gate:true },
+      { id:'hr_s2', type:'yn', text:'Do they conduct background checks and signed confidentiality agreements for all staff with access to employee and compensation data?', help:'Without verified background checks and NDAs, your employees\' compensation data is being handled by unscreened individuals. This is a non-negotiable control.' },
+    ],
+    scalability: [
+      { id:'hr_sc1', type:'rating', text:'Rate their capacity to absorb rapid headcount changes — hiring spikes, reductions, or multi-location additions without service degradation.', help:'1 = manual processes that break under scale, 5 = automated workflows with documented capacity thresholds and confirmed surge handling for comparable clients.' },
+      { id:'hr_sc2', type:'yn', text:'Can they simultaneously manage multiple employee categories — FTE, part-time, contractors, and 1099s — within a single payroll run?', help:'Multi-category payroll management is a hard capability differentiator. Confirm with live client references, not system demos.' },
+      { id:'hr_sc3', type:'yn', text:'Do they have a documented offboarding and data return process — covering employee records, payroll history, and system access revocation — that can be executed within a defined timeline upon contract termination?', help:'Payroll vendor transitions are operationally complex. A vendor without a documented exit process creates continuity risk and potential data exposure. Ask for the specific timeline and deliverable list they provide to departing clients.' },
+    ],
+    communication: [
+      { id:'hr_cm1', type:'rating', text:'Rate the quality of their payroll run communication — do they issue proactive cut-off alerts, error flags, and post-run confirmation reports?', help:'1 = you must chase them for updates, 5 = automated alerts at every stage with a named SPOC who responds within 2 hours.' },
+      { id:'hr_cm2', type:'yn', text:'Do they provide a monthly compliance summary covering all statutory filings made, amounts remitted, and upcoming deadlines?', help:'Monthly compliance reporting is a baseline governance requirement. Any vendor not providing this is operating without accountability structures.' },
+    ],
+    cost: [
+      { id:'hr_ct1', type:'rating', text:'Rate the transparency of their fee structure — can you see per-head pricing, one-time setup costs, and all variable add-ons before signing?', help:'1 = single blended fee with no breakdown, 5 = itemised price schedule with per-service pricing and confirmed zero hidden charges.' },
+      { id:'hr_ct2', type:'yn', text:'Are all variable charges — compliance filing fees, error corrections, off-cycle payroll runs, and statutory queries — explicitly priced and agreed in writing before they are incurred?', help:'Unwritten variable charges are the most common cause of billing disputes in payroll engagements. A vendor unable to provide a written fee schedule for these items is a cost risk.' },
+    ],
+  },
+  finance: {
+    financial: [
+      { id:'fin_f1', type:'rating', text:'Rate the firm\'s own financial stability — can they demonstrate revenue scale, ownership continuity, and the team depth to avoid key-person dependency?', help:'An accounting firm with a single key partner is itself a financial continuity risk. Ask about succession planning and key-person cover.' },
+      { id:'fin_f2', type:'yn', text:'Do they carry professional indemnity (E&O) insurance adequate for the total financial scope they will manage for you?', help:'Request the policy limits and verify coverage applies to accounting errors and omissions. Without adequate PI cover, an error could be entirely your loss.' },
+    ],
+    compliance: [
+      { id:'fin_c1', type:'yn', text:'Is the firm registered as a CPA firm or equivalent and are all client-facing professionals licenced in your state?', help:'Verify CPA licence numbers directly with your state board. Practising without a licence is fraud — this is a hard gate with no exceptions.', gate:true },
+      { id:'fin_c2', type:'yn', text:'Is the firm free from any active IRS, state revenue agency, or regulatory enforcement actions against the practice?', help:'A firm under active enforcement cannot credibly manage your compliance obligations. Verify independently — enforcement actions are public record. A No here is a hard disqualifier.' },
+      { id:'fin_c3', type:'yn', text:'Do they maintain independence standards and can they confirm they have no conflicts of interest with your business or competitors?', help:'Independence is a professional requirement for audit and advisory work. Ask for a formal conflict check before engagement.' },
+      { id:'fin_c4', type:'yn', text:'Are any bookkeeping, tax preparation, or reporting tasks performed by offshore teams or subcontracted firms — and if so, are those parties subject to the same data handling and confidentiality obligations?', help:'Offshoring of financial data is common and rarely disclosed upfront. Ask explicitly. Subprocessors handling your financial data must be named, auditable, and bound by equivalent contractual obligations.' },
+    ],
+    quality: [
+      { id:'fin_q1', type:'rating', text:'Rate the quality of their financial reporting outputs — balance sheets, P&L, MIS, and management accounts — using samples or client references.', help:'Ask to see an anonymised client report. 5 = clean, audit-ready deliverables with variance commentary, delivered to a committed schedule.' },
+      { id:'fin_q2', type:'yn', text:'Have they managed IRS audits, state tax audits, or complex multi-entity financial structures for businesses of your size and type?', help:'Audit management requires specialist experience. Ask for specific case descriptions — general claims of capability are insufficient.' },
+      { id:'fin_q3', type:'yn', text:'Are they proficient in your specific accounting software — QuickBooks, Xero, NetSuite, or SAP — and can they demonstrate platform expertise?', help:'Software proficiency gaps create reconciliation risks and reduce your ability to self-serve between engagements.' },
+    ],
+    security: [
+      { id:'fin_s1', type:'yn', text:'Do they use maker-checker controls and segregation of duties for all payment and banking transactions they manage?', help:'Single-person control over payments is a fraud risk regardless of trust. Segregation of duties is a non-negotiable financial control.', gate:true },
+      { id:'fin_s2', type:'yn', text:'Are all staff with access to client financial data subject to background checks, signed NDAs, and role-based system access?', help:'Financial data is high-value for identity theft and fraud. An unscreened team handling your accounts payable or banking is an unacceptable risk.' },
+    ],
+    scalability: [
+      { id:'fin_sc1', type:'rating', text:'Rate their capacity to scale as your transaction volume, entity count, or reporting complexity grows over the next 2 years.', help:'1 = single accountant with no backup and no growth plan, 5 = tiered team structure with documented capacity levels and a defined deputy for continuity.' },
+      { id:'fin_sc2', type:'yn', text:'Can they support multi-entity consolidation, inter-company eliminations, and group-level financial reporting?', help:'Multi-entity accounting requires specialist capability. Confirm with live client examples — this is a hard filter for growing businesses.' },
+      { id:'fin_sc3', type:'yn', text:'Do they have a documented client exit process covering data export in portable formats, final reconciliation, file handover, and access revocation — completable within 30 days of notice?', help:'Financial data portability is critical. A vendor who cannot guarantee clean export of your ledgers, reports, and tax files in standard formats is a lock-in risk. Ask for the specific file formats and timeline they commit to.' },
+    ],
+    communication: [
+      { id:'fin_cm1', type:'rating', text:'Rate the quality and consistency of their month-end close process — defined deadlines, deliverable schedules, and variance commentary.', help:'1 = you receive numbers with no explanation or schedule, 5 = committed close calendar with written variance analysis and CFO-ready narrative.' },
+      { id:'fin_cm2', type:'yn', text:'Do they provide a dedicated relationship partner — separate from the processing team — for strategic financial questions and governance?', help:'Operational and strategic contacts must be clearly separated. Routing strategic questions through your bookkeeper creates bottlenecks and errors.' },
+    ],
+    cost: [
+      { id:'fin_ct1', type:'rating', text:'Rate the transparency of their billing model — are fixed fees, retainers, and variable advisory work clearly scoped and priced in advance?', help:'1 = pure time-and-material with no estimates or caps, 5 = fixed-fee schedule for defined work with written estimates for all variable scope.' },
+      { id:'fin_ct2', type:'yn', text:'Are all out-of-scope items — tax notices, IRS correspondence, valuations, and special filings — explicitly priced and agreed before work begins?', help:'Scope creep without prior written agreement is the primary cause of billing disputes in accounting engagements. Get every edge case in writing.' },
+    ],
+  },
+  it: {
+    financial: [
+      { id:'it_f1', type:'rating', text:'Rate the vendor\'s financial stability and operational reserves — can they sustain long-term contracts if their key client base shrinks by 30%?', help:'IT vendors that fold mid-engagement leave critical systems unsupported. Assess their runway, ownership structure, and whether they are VC-backed with burn concerns.' },
+      { id:'it_f2', type:'yn', text:'Do they carry both professional indemnity and cyber liability insurance with limits appropriate to the systems and data they will manage?', help:'Cyber liability insurance is a minimum expectation for any IT vendor. Request the policy schedule and confirm coverage applies to third-party data breaches.' },
+    ],
+    compliance: [
+      { id:'it_c1', type:'yn', text:'Do they hold SOC 2 Type II certification or ISO 27001 — not just SOC 2 Type I or self-attestation?', help:'SOC 2 Type II covers a 6-12 month audit period and is the gold standard for managed IT. Type I is a point-in-time snapshot and is insufficient for ongoing engagements.', gate:true },
+      { id:'it_c2', type:'yn', text:'Are they compliant with all data protection laws applicable to the personal and financial data they will access (CCPA, HIPAA, GDPR as applicable)?', help:'Non-compliance here creates direct legal liability for your company. Require written attestation, not just verbal confirmation.', gate:true },
+      { id:'it_c3', type:'yn', text:'Do they maintain a documented change management process with CAB approval for changes to production environments?', help:'Undocumented or unapproved changes to production are the leading cause of self-inflicted IT outages. Change management maturity directly correlates with uptime.' },
+      { id:'it_c4', type:'yn', text:'Are any infrastructure components, helpdesk functions, or security monitoring subcontracted to third-party providers — and if so, are those providers named, auditable, and bound by equivalent security and compliance obligations?', help:'Fourth-party IT risk is one of the most commonly missed due-diligence gaps. Ask for a full list of subprocessors and confirm each one is covered by the same compliance and contractual obligations as the primary vendor.' },
+    ],
+    quality: [
+      { id:'it_q1', type:'rating', text:'Rate their historical uptime record and helpdesk SLA performance — can they provide documented evidence from comparable client environments?', help:'Request actual uptime reports (target 99.5%+), average resolution times by priority tier, and escalation frequency data. Verbal claims are insufficient.' },
+      { id:'it_q2', type:'yn', text:'Do they conduct proactive technology reviews and present roadmap recommendations to clients — or are they purely reactive?', help:'Reactive-only IT vendors accumulate technical debt silently. Proactive advisory is the differentiator between a vendor and a strategic technology partner.' },
+      { id:'it_q3', type:'yn', text:'Have they managed IT environments of comparable complexity — same industry, cloud platforms, and security requirements — for a reference client you can contact?', help:'An IT vendor whose largest reference client is a 5-person firm cannot be validated for a 100-person managed services engagement. Insist on comparable scope.' },
+    ],
+    security: [
+      { id:'it_s1', type:'rating', text:'Rate their proactive security posture — automated patch management, vulnerability scanning cadence, and documented incident response SLA.', help:'1 = reactive only with no documented IR plan, 5 = automated patch management, monthly vulnerability scans, and a tested IR playbook with sub-4-hour response SLA.' },
+      { id:'it_s2', type:'yn', text:'Have they conducted an independent third-party penetration test in the last 12 months and will they share the executive summary?', help:'A vendor managing your IT who has not been pen-tested is a vendor managing your IT blind. Refusal to share results signals something to hide.' },
+    ],
+    scalability: [
+      { id:'it_sc1', type:'rating', text:'Rate their capacity to scale infrastructure and support as your user base, systems, or geographic footprint grows.', help:'1 = fixed-resource contract with no elasticity, 5 = elastic resource model with documented onboarding SLAs for new systems and cloud-native infrastructure.' },
+      { id:'it_sc2', type:'yn', text:'Can they support multi-site, hybrid cloud, and remote-first workforce infrastructure — simultaneously and from day one?', help:'Single-site IT vendors cannot support a distributed workforce. If your team is remote-first or multi-location, this is a hard capability requirement.' },
+      { id:'it_sc3', type:'yn', text:'Do they have a documented transition-out plan covering configuration documentation, credential handover, data export, and knowledge transfer to a successor vendor — executable within 60 days?', help:'IT vendor transitions are among the highest-risk operational events a business faces. A vendor without a documented exit plan is a vendor who has never thought seriously about leaving. Ask for a written transition runbook and confirm it has been executed for a previous client.' },
+    ],
+    communication: [
+      { id:'it_cm1', type:'rating', text:'Rate the quality of their incident communication — proactive alerts, root cause analysis, and ETA updates without prompting from the client.', help:'1 = you find out about outages from your own users, 5 = automated alerting within minutes, with root cause and resolution ETA in the first communication.' },
+      { id:'it_cm2', type:'yn', text:'Do they provide a monthly IT health report covering uptime, ticket trends, open risks, security events, and upcoming licence renewals?', help:'Monthly reporting is standard practice for any managed IT engagement. A vendor not providing this has no accountability structure.' },
+    ],
+    cost: [
+      { id:'it_ct1', type:'rating', text:'Rate the transparency of their pricing — per-user, per-device, or managed service fee with a clearly defined scope and disclosed overage rates.', help:'1 = opaque all-in fee with no breakdown, 5 = itemised per-user/device pricing with defined scope and all out-of-scope rates in writing before contract.' },
+      { id:'it_ct2', type:'yn', text:'Are project-based work, hardware procurement margins, software licensing, and emergency call-outs billed at pre-disclosed rates?', help:'The biggest IT billing surprises come from undefined out-of-scope work. Require a written fee schedule for every billable category before signing.' },
+    ],
+  },
+  legal: {
+    financial: [
+      { id:'lg_f1', type:'rating', text:'Rate the firm\'s operational stability — partner tenure, team continuity, malpractice history, and firm size relative to your engagement scope.', help:'A small firm with high partner turnover creates continuity risk on ongoing matters. Assess whether the partner handling your work has adequate backup within the firm.' },
+      { id:'lg_f2', type:'yn', text:'Do they hold professional malpractice (E&O) insurance with limits adequate to cover the value and risk of the matters they will handle?', help:'Verify coverage limits against the financial exposure of your highest-risk matters. Inadequate PI cover shifts your risk exposure in the event of a legal error.' },
+    ],
+    compliance: [
+      { id:'lg_c1', type:'yn', text:'Are all attorneys handling your matters currently licenced to practise in your jurisdiction with no disciplinary history or bar complaints?', help:'Verify bar numbers independently at your state bar website. Practising with a suspended or lapsed licence is fraud — this is a zero-tolerance gate.', gate:true },
+      { id:'lg_c2', type:'yn', text:'Do they maintain a documented and systematic conflicts-of-interest check process before accepting new clients or matters?', help:'Conflict checking is a fundamental professional obligation. Absence of a formal process — or reluctance to describe it — is disqualifying.' },
+      { id:'lg_c3', type:'yn', text:'Is attorney-client privilege actively protected in their operational processes — secure communication channels, privilege logs, and clean desk protocols?', help:'Privilege protection must be evidenced through practice, not just verbal assurance. Ask how they handle mixed-use devices and remote work environments.', gate:true },
+      { id:'lg_c4', type:'yn', text:'Is any legal work — research, drafting, or review — subcontracted to external counsel, legal process outsourcing firms, or AI-assisted platforms, and if so, are you notified and do equivalent privilege and confidentiality protections apply?', help:'Outsourced legal work is increasingly common and rarely disclosed. Privilege may not extend to third-party providers depending on jurisdiction. Require written disclosure of all subcontractors and confirm your matter data does not train any AI system without explicit consent.' },
+    ],
+    quality: [
+      { id:'lg_q1', type:'rating', text:'Rate the commercial usability of their work product — are contracts, opinions, and memos actionable by a business operator without legal training?', help:'1 = dense legalese with no plain-language summary, 5 = clear, actionable outputs with an executive summary and flagged decision points for the business.' },
+      { id:'lg_q2', type:'yn', text:'Do they have documented experience in the specific legal domains critical to your business — corporate, employment, IP, regulatory, or commercial contracts?', help:'General practice firms operating outside their core competency create risk on specialist matters. Insist on practice-area specific experience, not general capability claims.' },
+      { id:'lg_q3', type:'yn', text:'Can they provide specific examples of matters handled for businesses in your industry, including regulatory or litigation outcomes?', help:'Industry-specific experience significantly reduces risk and onboarding time. Ask for named examples (with client consent) or detailed anonymised case descriptions.' },
+    ],
+    security: [
+      { id:'lg_s1', type:'rating', text:'Rate the security of their document management and communication systems — encrypted client portal, version control, and access logging.', help:'1 = email attachments with no encryption or access controls, 5 = dedicated secure client portal with access logging, version history, and MFA.' },
+      { id:'lg_s2', type:'yn', text:'Do they have a written data retention and destruction policy covering client files, and are records held beyond the statutory minimum destroyed securely?', help:'Law firms handling confidential business records must manage retention explicitly. Indefinite file retention without policy is a data risk.' },
+    ],
+    scalability: [
+      { id:'lg_sc1', type:'rating', text:'Rate their capacity to absorb increased legal workload during high-demand periods — fundraising, M&A, regulatory review, or active litigation.', help:'1 = solo practitioner with no bench capacity, 5 = full-service team with a defined surge model and a named partner responsible for escalation.' },
+      { id:'lg_sc2', type:'yn', text:'Can they support multi-state or multi-jurisdictional matters, or do they have a validated referral network for matters outside their geographic scope?', help:'Multi-jurisdiction capability is essential for growing companies. Ask for specific referral network details and their process for managing handoffs.' },
+      { id:'lg_sc3', type:'yn', text:'Do they have a documented matter handover process — covering file transfer, privilege log, open deadlines, and court obligations — that can be completed within a defined timeline if you need to transition to new counsel?', help:'Transitioning legal matters mid-engagement is high-risk. A firm without a structured handover process creates continuity and privilege risks. Confirm they have executed a transition for a departing client before and ask for the specific protocol.' },
+    ],
+    communication: [
+      { id:'lg_cm1', type:'rating', text:'Rate their responsiveness and turnaround discipline — do they commit to SLAs for contract review, opinion delivery, and urgent query response?', help:'1 = multi-day turnarounds with no status updates, 5 = defined turnaround SLAs for each matter type with proactive status updates for matters over 48 hours.' },
+      { id:'lg_cm2', type:'yn', text:'Do they proactively alert you to regulatory changes, court decisions, or compliance deadlines relevant to your business — without being asked?', help:'Proactive advisory is the single clearest differentiator between a transactional legal vendor and a strategic legal partner.' },
+    ],
+    cost: [
+      { id:'lg_ct1', type:'rating', text:'Rate the predictability of their billing — fixed fees, retainers, or hourly rates with written scope and estimate commitments before work begins.', help:'1 = pure hourly billing with no estimates, 5 = fixed-fee schedule for defined matter types with written estimates and a cap approval process for variable matters.' },
+      { id:'lg_ct2', type:'yn', text:'Are all disbursements, filing fees, junior associate time, and travel billed at disclosed rates and agreed in writing before incurring?', help:'Undisclosed disbursements and uncontrolled junior billing are the most common causes of legal cost disputes. Require full disclosure before the engagement starts.' },
+    ],
+  },
+  marketing: {
+    financial: [
+      { id:'mk_f1', type:'rating', text:'Rate the agency\'s financial and operational stability — team ownership, staff tenure, and whether key creatives are employed or freelance-dependent.', help:'Boutique agencies built on freelancer networks carry campaign continuity risk. Assess what percentage of their delivery team are permanent employees.' },
+      { id:'mk_f2', type:'yn', text:'Do they carry professional indemnity and media liability insurance covering claims arising from campaign content — including influencer activity?', help:'Media liability covers regulatory complaints, defamation claims, and IP infringement from campaign content. Confirm coverage extends to all channels and formats they will manage.' },
+    ],
+    compliance: [
+      { id:'mk_c1', type:'yn', text:'Do all campaign materials they produce comply with FTC guidelines, platform advertising policies, and applicable advertising standards?', help:'Non-compliant advertising creates regulatory fines, ad account suspensions, and reputational damage. Ask for their documented compliance review process for all content.', gate:true },
+      { id:'mk_c2', type:'yn', text:'Do they have documented processes for CCPA/GDPR-compliant data handling in digital campaigns — cookie consent, list management, and audience suppression?', help:'Digital marketing involving customer data requires documented consent flows and data handling procedures. Absence of these is a direct regulatory liability for your company.' },
+      { id:'mk_c3', type:'yn', text:'Do they obtain written IP assignments or licences for all creative assets produced on your behalf — copy, imagery, video, and music?', help:'Failure to secure IP rights means campaign assets you have paid for may not be legally yours to use. Require IP assignment clauses as standard in their contract.' },
+      { id:'mk_c4', type:'yn', text:'Are freelancers, influencers, media buyers, or specialist subagencies used in campaign delivery — and if so, are they contractually bound by the same compliance, IP, and data handling obligations as the primary agency?', help:'The majority of agency compliance failures originate with subcontracted talent and freelancers who are not covered by the agency\'s own policies. Require a written list of all delivery partners and confirm IP assignments and data obligations flow down to each one.' },
+    ],
+    quality: [
+      { id:'mk_q1', type:'rating', text:'Rate the strategic depth and measurable ROI evidence in their portfolio — specific campaign metrics, not just creative awards or aesthetic quality.', help:'Ask for specific ROAS, CPL, conversion rates, and before/after data. 5 = detailed performance case studies with auditable metrics from comparable campaigns.' },
+      { id:'mk_q2', type:'yn', text:'Do they conduct structured post-campaign analysis and share a written performance report with actionable recommendations — proactively?', help:'Agencies that do not analyse outcomes cannot improve them. A post-campaign report is not optional — it is the primary accountability mechanism.' },
+      { id:'mk_q3', type:'yn', text:'Have they delivered measurable results for businesses in your industry, at your budget level, targeting your specific customer segment?', help:'Industry and budget-level match matters enormously. A B2C consumer agency cannot be validated for B2B enterprise marketing — and vice versa.' },
+    ],
+    security: [
+      { id:'mk_s1', type:'yn', text:'Do they follow documented access management protocols for your brand accounts — ad platforms, social channels, CMS, and analytics — including formal offboarding?', help:'Unrevoked agency access after engagement close is among the most common security failures in marketing. Require a written offboarding checklist with a 48-hour revocation SLA.', gate:true },
+      { id:'mk_s2', type:'yn', text:'Do they store your customer lists, email contacts, and audience data on compliant platforms with documented data handling and deletion policies?', help:'Customer data handled by agencies is subject to the same privacy regulations as your own systems. Failure here creates regulatory exposure for your company, not the agency.' },
+    ],
+    scalability: [
+      { id:'mk_sc1', type:'rating', text:'Rate their capacity to manage fully integrated, multi-channel campaigns in-house — paid media, SEO, content, social, and email — without material subcontracting.', help:'1 = single-channel specialists who subcontract everything else, 5 = full-service in-house capability with documented channel integration and unified reporting.' },
+      { id:'mk_sc2', type:'yn', text:'Can they absorb campaign scale-ups for product launches, seasonal peaks, or new market entry within a committed onboarding timeframe?', help:'Ask for their documented surge capacity process and a specific example of scaling for a comparable client. Unstructured responses indicate no real surge capability.' },
+      { id:'mk_sc3', type:'yn', text:'Do they have a documented offboarding process covering brand asset transfer, audience data deletion, account access revocation, and campaign performance archive delivery — completable within 14 days of contract end?', help:'Agency offboarding failures routinely result in retained access to brand accounts, undeleted customer data, and lost campaign history. Require a written offboarding checklist with explicit timelines and named accountabilities before signing.' },
+    ],
+    communication: [
+      { id:'mk_cm1', type:'rating', text:'Rate the quality and regularity of their campaign reporting — clarity, insight depth, actionability, and alignment with your business metrics.', help:'1 = raw data dumps with no interpretation or business context, 5 = structured weekly/monthly reports with insight commentary and specific recommended next actions.' },
+      { id:'mk_cm2', type:'yn', text:'Do they provide a dedicated account manager who understands your brand strategy and business objectives — separate from the campaign execution team?', help:'Campaign execution and strategic brand stewardship require different skills. Routing brand decisions through a campaign manager creates strategic drift over time.' },
+    ],
+    cost: [
+      { id:'mk_ct1', type:'rating', text:'Rate the transparency of their fee structure — agency fees, media spend markups, third-party tool costs, and production charges all separately itemised.', help:'1 = opaque percentage-of-spend fees with no breakdown, 5 = itemised fee schedule with zero-markup media buying, auditable spend reports, and tool costs disclosed.' },
+      { id:'mk_ct2', type:'yn', text:'Are creative production costs, influencer or media spend, and third-party tool fees billed separately and itemised with supporting documentation?', help:'Bundled costs make it structurally impossible to assess efficiency or identify waste. Require full itemisation before committing to a retainer or project fee.' },
+    ],
+  },
+  ops: {
+    financial: [
+      { id:'op_f1', type:'rating', text:'Rate the financial stability and operational resilience of the vendor — can they sustain delivery if 20% of their team leaves or their anchor client churns?', help:'Operations vendors managing your facilities or logistics become embedded in your business. A financially fragile vendor creates critical continuity risk that is hard to unwind quickly.' },
+      { id:'op_f2', type:'yn', text:'Do they carry adequate general liability, professional indemnity, and workers\' compensation insurance for all staff they deploy to your premises or operations?', help:'If they manage on-site staff or third-party vendors, verify that insurance covers all deployed personnel — not just their direct employees.' },
+    ],
+    compliance: [
+      { id:'op_c1', type:'yn', text:'Are they compliant with all applicable federal and state labour laws for the contract staff or on-site resources they deploy on your behalf?', help:'Third-party labour non-compliance creates co-employer and principal employer liability for the client. Require documented compliance evidence, not verbal assurance.', gate:true },
+      { id:'op_c2', type:'yn', text:'Do they maintain a documented compliance register covering all third-party sub-vendors and contractors they manage on your behalf?', help:'Operations vendors managing sub-vendors must have downstream compliance controls. Failure in their supply chain can become your liability.' },
+      { id:'op_c3', type:'yn', text:'Are all on-site staff subject to background checks, drug testing, and signed confidentiality agreements before deployment?', help:'On-site access to your premises, equipment, and sensitive operations requires verified personnel. This is non-negotiable for any site access engagement.' },
+    ],
+    quality: [
+      { id:'op_q1', type:'rating', text:'Rate the maturity of their SOP documentation and knowledge transfer protocols — are they able to transition operations with written runbooks on day one?', help:'1 = informal handovers with no documentation and tribal knowledge only, 5 = comprehensive SOPs with version control, training records, and signed handover milestones.' },
+      { id:'op_q2', type:'yn', text:'Do they use dedicated operations management software — not just email, chat, or spreadsheets — for tracking KPIs, incidents, and vendor performance?', help:'Software maturity directly signals process maturity. Manual operations management at any meaningful scale is a high-risk indicator.' },
+      { id:'op_q3', type:'yn', text:'Can they provide documented case studies or references from businesses where they successfully transitioned an existing operations function from in-house or another vendor?', help:'Transitions are the highest-risk moment in an operations engagement. Evidence of successful prior transitions is the clearest quality signal available.' },
+    ],
+    security: [
+      { id:'op_s1', type:'yn', text:'Do they have documented physical access controls and visitor management protocols for all sites and facilities they manage on your behalf?', help:'Physical access management is as important as digital access management. Require a written access control policy covering visitors, contractors, and departing staff.', gate:true },
+      { id:'op_s2', type:'yn', text:'Do they access, process, or store any of your financial, contractual, or HR data in the course of delivering their services?', help:'Operations vendors often touch sensitive data incidentally — through facilities management systems, timekeeping tools, or document handling. Establish the data exposure boundary before assessing controls.' },
+      { id:'op_s2b', type:'yn', text:'Where sensitive data is accessed, are role-based access controls, data classification policies, and audit logging demonstrably in place?', help:'If they confirmed data access above, the same security standards that apply to your IT vendor must apply here. Request evidence of controls — policy documents, system screenshots, or a third-party audit report.' },
+    ],
+    scalability: [
+      { id:'op_sc1', type:'rating', text:'Rate their capacity to manage operations across multiple locations, remote teams, or a rapidly expanding operational scope without service degradation.', help:'1 = single-location, manual coordination only, 5 = multi-site experience with centralised dashboards, a scalable team model, and documented onboarding for new locations.' },
+      { id:'op_sc2', type:'yn', text:'Can they absorb new operational functions or locations within a committed and documented onboarding timeline — not just "we can figure it out"?', help:'Unstructured answers to scope expansion questions indicate no real scalability. A vendor with genuine capacity will have a documented onboarding process to show you.' },
+      { id:'op_sc3', type:'yn', text:'Do they have a documented exit and transition plan — covering SOP handover, vendor contract novation, staff redeployment, and site access revocation — that can be executed within a defined notice period?', help:'Operations vendors become deeply embedded in day-to-day delivery. A vendor without a structured exit plan creates dependency by design. Ask for the specific runbooks and timelines they provide to clients on exit, and whether they have completed a transition for a previous client.' },
+    ],
+    communication: [
+      { id:'op_cm1', type:'rating', text:'Rate the quality and frequency of their operational reporting — do they produce structured weekly status reports covering KPIs, open issues, risks, and escalations?', help:'1 = ad hoc updates only when you chase them, 5 = structured weekly reporting with a defined template, KPI dashboard access, and documented escalation triggers.' },
+      { id:'op_cm2', type:'yn', text:'Will they commit to a monthly operations review meeting with a defined agenda covering performance, risks, and upcoming changes?', help:'Without a structured review cadence, operational drift accumulates silently. A committed monthly review is the minimum governance requirement.' },
+    ],
+    cost: [
+      { id:'op_ct1', type:'rating', text:'Rate the transparency of their pricing — management fee, headcount-based billing, or outcome-based pricing tied to defined and measurable KPIs.', help:'1 = opaque blended fee with no activity breakdown, 5 = itemised pricing tied to measurable outcomes with no undisclosed charges or markup on third-party spend.' },
+      { id:'op_ct2', type:'yn', text:'Are all third-party vendor costs, facilities expenses, and ad hoc procurement passed through at cost with full documentation and no hidden markup?', help:'Markup on third-party spend without disclosure is the most common cost integrity failure in operations outsourcing. Require a written pass-through policy before signing.' },
+    ],
+  },
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let state = {
+  fn: null,
+  vendorName: '',
+  contact: '',
+  date: '',
+  evaluator: '',
+  companyName: '',
+  contractScope: '',
+  answers: {},
+  notes: {},
+  currentCat: 0,
+  completed: false,
+};
+
+function loadEvals() {
+  try { return JSON.parse(localStorage.getItem('sea_evals') || '[]'); } catch(e) { return []; }
+}
+function saveEval(ev) {
+  const evals = loadEvals();
+  evals.unshift(ev);
+  localStorage.setItem('sea_evals', JSON.stringify(evals.slice(0, 50)));
+}
+
+// ── SCREEN NAV ────────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome() { 
+  document.getElementById('header-score-bar').style.display = 'none';
+  renderHome(); showScreen('home'); 
+}
+function newEval() { selectFunction(state.fn); }
+
+// ── HOME ──────────────────────────────────────────────────────────────────────
+function renderHome() {
+  const grid = document.getElementById('function-grid');
+  grid.innerHTML = FUNCTIONS.map(fn => {
+    const evals = loadEvals().filter(e => e.fn === fn.id);
+    return `<div class="home-card" onclick="selectFunction('${fn.id}')">
+      <div class="card-top">
+        <div class="card-icon">${fn.icon}</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-fn">${fn.name}</div>
+      <div class="card-desc">${fn.desc}</div>
+      <div class="card-count">${evals.length} evaluation${evals.length !== 1 ? 's' : ''} completed</div>
+    </div>`;
+  }).join('');
+
+  const evals = loadEvals();
+  const pastList = document.getElementById('past-list');
+  if (!evals.length) {
+    pastList.innerHTML = '<div class="empty-state">No evaluations yet. Select a function above to begin.</div>';
+    return;
+  }
+  pastList.innerHTML = evals.slice(0, 8).map(ev => {
+    const fn = FUNCTIONS.find(f => f.id === ev.fn);
+    const pillClass = ev.signal === 'PROCEED' ? 'pill-proceed' : ev.signal === 'HOLD' ? 'pill-hold' : 'pill-reject';
+    return `<div class="eval-row" onclick="showResult('${ev.id}')">
+      <span class="eval-fn-badge">${fn ? fn.name : ev.fn}</span>
+      <span class="eval-name">${ev.vendorName}</span>
+      <span class="eval-date">${ev.date}</span>
+      <span class="signal-pill ${pillClass}">${ev.signal}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── SELECT FUNCTION ───────────────────────────────────────────────────────────
+function selectFunction(fnId) {
+  state = { fn: fnId, vendorName:'', contact:'', date:'', evaluator:'', companyName:'', contractScope:'', answers:{}, notes:{}, currentCat:0, completed:false };
+  const fn = FUNCTIONS.find(f => f.id === fnId);
+  document.getElementById('interview-fn-title').textContent = fn.name;
+  document.getElementById('interview-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('vendor-name').value = '';
+  document.getElementById('vendor-contact').value = '';
+  document.getElementById('evaluator-name').value = '';
+  document.getElementById('company-name').value = '';
+  document.getElementById('contract-scope').value = '';
+  document.getElementById('setup-panel').style.display = 'block';
+  document.getElementById('interview-panel').style.display = 'none';
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('vendor-name').addEventListener('input', checkStart);
+  showScreen('interview');
+}
+
+function checkStart() {
+  document.getElementById('start-btn').disabled = !document.getElementById('vendor-name').value.trim();
+}
+
+// ── BUILD QUESTIONS ───────────────────────────────────────────────────────────
+function buildQuestions(fnId) {
+  const fnQ = FN_QUESTIONS[fnId] || {};
+  return CATEGORIES.map(cat => {
+    const core = (CORE_QUESTIONS[cat.id] || []).map(q => ({...q, fnSpecific: false}));
+    const extra = (fnQ[cat.id] || []).map(q => ({...q, fnSpecific: true}));
+    return { ...cat, questions: [...core, ...extra] };
+  });
+}
+
+// ── START INTERVIEW ───────────────────────────────────────────────────────────
+function startInterview() {
+  state.vendorName = document.getElementById('vendor-name').value.trim();
+  state.contact = document.getElementById('vendor-contact').value.trim();
+  state.date = document.getElementById('interview-date').value;
+  state.evaluator = document.getElementById('evaluator-name').value.trim();
+  state.companyName = document.getElementById('company-name').value.trim();
+  state.contractScope = document.getElementById('contract-scope').value.trim();
+  state.questions = buildQuestions(state.fn);
+  state.currentCat = 0;
+
+  document.getElementById('setup-panel').style.display = 'none';
+  document.getElementById('interview-panel').style.display = 'block';
+
+  renderLiveHeat();
+  updateHeaderScoreBar();
+  renderCategory(0);
+}
+
+// ── LIVE HEATMAP ──────────────────────────────────────────────────────────────
+function computeCatScore(cat) {
+  const qs = cat.questions;
+  if (!qs.length) return { score: null, rag: 'neutral', gateTripped: false };
+  
+  let totalWeight = 0, weightedScore = 0, gateTripped = false, answered = 0;
+  
+  qs.forEach(q => {
+    const ans = state.answers[q.id];
+    if (ans === undefined || ans === null || ans === '') return;
+    answered++;
+    if (q.type === 'yn') {
+      // Inverted questions: "No" is the positive/good answer (e.g. "Has there been a data breach?" or "Are there lock-in clauses?")
+      const positiveAnswer = q.inverted ? 'no' : 'yes';
+      const val = ans === positiveAnswer ? 100 : 0;
+      weightedScore += val; totalWeight += 100;
+      if (q.gate && !q.inverted && ans === 'no') gateTripped = true;
+      if (q.gate && q.inverted && ans === 'yes') gateTripped = true;
+    } else if (q.type === 'rating') {
+      const val = (ans / 5) * 100;
+      weightedScore += val; totalWeight += 100;
+    }
+  });
+  
+  if (totalWeight === 0) return { score: null, rag: 'neutral', gateTripped };
+  const score = Math.round(weightedScore / totalWeight * 100);
+  const rag = gateTripped ? 'red' : score >= 65 ? 'green' : score >= 40 ? 'amber' : 'red';
+  return { score, rag, gateTripped };
+}
+
+function renderLiveHeat() {
+  const container = document.getElementById('live-heat');
+  container.innerHTML = (state.questions || buildQuestions(state.fn)).map((cat, i) => {
+    const { score, rag } = computeCatScore(cat);
+    const ragClass = rag === 'neutral' ? '' : rag;
+    return `<div class="lh-cell ${ragClass}" id="lh-${cat.id}">
+      <div class="lh-name">${cat.short}</div>
+      <div class="lh-score">${score !== null ? score : '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateHeaderScoreBar() {
+  const bar = document.getElementById('header-score-bar');
+  if (!state.questions || !state.fn) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+
+  // Vendor label
+  document.getElementById('header-vendor-label').textContent = state.vendorName ? state.vendorName.toUpperCase() : '';
+
+  // Category pills
+  const pills = document.getElementById('header-cat-pills');
+  pills.innerHTML = state.questions.map(cat => {
+    const { score, rag } = computeCatScore(cat);
+    const color = rag === 'green' ? 'var(--green)' : rag === 'amber' ? 'var(--amber)' : rag === 'red' ? 'var(--red)' : 'var(--muted)';
+    const bg = rag === 'green' ? 'var(--green-bg)' : rag === 'amber' ? 'var(--amber-bg)' : rag === 'red' ? 'var(--red-bg)' : 'var(--navy3)';
+    return `<div title="${cat.name}" style="width:6px;height:6px;border-radius:50%;background:${color};opacity:${score !== null ? 1 : 0.3};"></div>`;
+  }).join('');
+
+  // Weighted total
+  const catResults = state.questions.map(cat => {
+    const { score, rag, gateTripped } = computeCatScore(cat);
+    return { score: score !== null ? score : null, weight: cat.weight, rag, gateTripped };
+  });
+  const answered = catResults.filter(c => c.score !== null);
+  let totalScore = null;
+  let signal = null;
+  if (answered.length > 0) {
+    const weightedSum = answered.reduce((sum, c) => sum + (c.score * c.weight / 100), 0);
+    const weightCovered = answered.reduce((sum, c) => sum + c.weight, 0);
+    // Scale to covered weight for a live estimate
+    totalScore = Math.round((weightedSum / weightCovered) * 100);
+    const gateTripped = catResults.some(c => c.gateTripped);
+    signal = gateTripped ? 'REJECT' : totalScore >= 70 ? 'PROCEED' : totalScore >= 50 ? 'HOLD' : 'REJECT';
+  }
+
+  const scoreEl = document.getElementById('header-total-score');
+  const pillEl = document.getElementById('header-signal-pill');
+  scoreEl.textContent = totalScore !== null ? totalScore : '—';
+
+  if (signal === 'PROCEED') {
+    scoreEl.style.color = 'var(--green)';
+    pillEl.textContent = 'PROCEED';
+    pillEl.style.cssText = 'font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.3)';
+  } else if (signal === 'HOLD') {
+    scoreEl.style.color = 'var(--amber)';
+    pillEl.textContent = 'HOLD';
+    pillEl.style.cssText = 'font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.3)';
+  } else if (signal === 'REJECT') {
+    scoreEl.style.color = 'var(--red)';
+    pillEl.textContent = 'REJECT';
+    pillEl.style.cssText = 'font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.3)';
+  } else {
+    scoreEl.style.color = 'var(--text)';
+    pillEl.textContent = '';
+    pillEl.style.cssText = 'font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;';
+  }
+}
+
+function updateLiveHeat() {
+  if (!state.questions) return;
+  state.questions.forEach(cat => {
+    const el = document.getElementById('lh-' + cat.id);
+    if (!el) return;
+    const { score, rag } = computeCatScore(cat);
+    el.className = 'lh-cell ' + (rag === 'neutral' ? '' : rag);
+    el.querySelector('.lh-score').textContent = score !== null ? score : '—';
+  });
+  updateHeaderScoreBar();
+}
+
+// ── RENDER CATEGORY ───────────────────────────────────────────────────────────
+function renderCategory(idx) {
+  state.currentCat = idx;
+  const cats = state.questions;
+  const total = cats.length;
+  const pct = Math.round((idx / total) * 100);
+  
+  document.getElementById('progress-label').textContent = `Category ${idx+1} of ${total}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  
+  const container = document.getElementById('categories-container');
+  const cat = cats[idx];
+  
+  container.innerHTML = `<div class="cat-section">
+    <div class="cat-header">
+      <div class="cat-num">${String(idx+1).padStart(2,'0')}</div>
+      <div class="cat-title">${cat.name}</div>
+      ${cat.gate ? '<span class="gate-tag">HARD GATE</span>' : ''}
+      <div class="cat-weight">${cat.weight}%</div>
+      <div class="cat-rag ${computeCatScore(cat).rag}" id="cat-rag-${cat.id}"></div>
+    </div>
+    <div class="cat-body">
+      ${cat.questions.map(q => renderQuestion(q)).join('')}
+      <div class="gate-alert" id="gate-alert-${cat.id}">
+        ⚠ Hard gate triggered: a failing answer on a compliance gate question has automatically set the recommendation to REJECT. You may continue to complete the evaluation, but the final signal will remain REJECT regardless of other scores.
+      </div>
+    </div>
+  </div>`;
+
+  cat.questions.forEach(q => restoreAnswer(q));
+  checkGateAlert(cat);
+
+  const nav = document.getElementById('nav-controls');
+  const isLast = idx === total - 1;
+  nav.innerHTML = `
+    ${idx > 0 ? `<button class="nav-btn" onclick="renderCategory(${idx-1})">← Previous</button>` : ''}
+    ${!isLast ? `<button class="nav-btn primary" onclick="renderCategory(${idx+1})">Next category →</button>` : ''}
+    ${isLast ? `<button class="nav-btn primary" onclick="finishInterview()">Complete evaluation →</button>` : ''}
+  `;
+
+  document.getElementById('overall-note-block').style.display = isLast ? 'block' : 'none';
+}
+
+function renderQuestion(q) {
+  const badge = q.type === 'yn' ? (q.gate ? 'q-gate' : 'q-rating') : q.type === 'rating' ? 'q-rating' : 'q-note';
+  const badgeText = q.type === 'yn' ? (q.gate ? 'COMPLIANCE GATE' : 'YES / NO') : q.type === 'rating' ? 'RATING 1–5' : 'QUALITATIVE NOTE';
+  const fnTag = q.fnSpecific ? ' <span style="font-size:9px;background:rgba(79,142,247,.15);color:var(--accent);border-radius:3px;padding:1px 5px;margin-left:4px;font-family:var(--mono)">FUNCTION-SPECIFIC</span>' : '';
+  
+  let input = '';
+  if (q.type === 'yn') {
+    const invertedNote = q.inverted ? `<div style="font-size:10px;color:var(--amber);font-family:var(--mono);margin-bottom:8px;padding:4px 8px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:4px;display:inline-block;">⚠ NEGATIVE INDICATOR — "No" is the positive outcome</div><br>` : '';
+    input = `${invertedNote}<div class="yn-group">
+      <button class="yn-btn" id="yn-yes-${q.id}" onclick="answerYN('${q.id}','yes')">Yes</button>
+      <button class="yn-btn" id="yn-no-${q.id}" onclick="answerYN('${q.id}','no')">No</button>
+    </div>`;
+  } else if (q.type === 'rating') {
+    input = `<div class="rating-group">${[1,2,3,4,5].map(n=>`<button class="r-btn" id="r-${q.id}-${n}" onclick="answerRating('${q.id}',${n})">${n}</button>`).join('')}</div>
+    <div class="rating-labels"><span>1 — Not evidenced</span><span>3 — Partially met</span><span>5 — Fully evidenced</span></div>`;
+  } else {
+    input = `<textarea class="q-textarea" id="note-${q.id}" placeholder="Add notes…" oninput="answerNote('${q.id}',this.value)"></textarea>`;
+  }
+  
+  return `<div class="question-block">
+    <div><span class="q-type-badge ${badge}">${badgeText}</span>${fnTag}</div>
+    <div class="q-text">${q.text}</div>
+    ${q.help ? `<div class="q-help">${q.help}</div>` : ''}
+    ${input}
+  </div>`;
+}
+
+function restoreAnswer(q) {
+  const ans = state.answers[q.id];
+  if (ans === undefined) return;
+  if (q.type === 'yn') {
+    const isInverted = q.inverted;
+    const yesBt = document.getElementById('yn-yes-'+q.id);
+    const noBt = document.getElementById('yn-no-'+q.id);
+    if (yesBt && noBt) {
+      if (ans === 'yes') {
+        yesBt.className = 'yn-btn ' + (isInverted ? 'selected-no' : 'selected-yes');
+        noBt.className = 'yn-btn';
+      } else if (ans === 'no') {
+        yesBt.className = 'yn-btn';
+        noBt.className = 'yn-btn ' + (isInverted ? 'selected-yes' : 'selected-no');
+      }
+    }
+  } else if (q.type === 'rating') {
+    [1,2,3,4,5].forEach(n => document.getElementById(`r-${q.id}-${n}`)?.classList.toggle('selected', n===ans));
+  } else {
+    const ta = document.getElementById('note-'+q.id);
+    if (ta) ta.value = ans || '';
+  }
+}
+
+function answerYN(qId, val) {
+  state.answers[qId] = val;
+  const cat = state.questions[state.currentCat];
+  const q = cat.questions.find(q => q.id === qId);
+  const isInverted = q && q.inverted;
+  const yesBt = document.getElementById('yn-yes-'+qId);
+  const noBt = document.getElementById('yn-no-'+qId);
+  // For inverted questions: Yes=bad(red), No=good(green). For normal: Yes=good(green), No=bad(red).
+  if (val === 'yes') {
+    yesBt.className = 'yn-btn ' + (isInverted ? 'selected-no' : 'selected-yes');
+    noBt.className = 'yn-btn';
+  } else {
+    yesBt.className = 'yn-btn';
+    noBt.className = 'yn-btn ' + (isInverted ? 'selected-yes' : 'selected-no');
+  }
+  updateCatRag(cat);
+  checkGateAlert(cat);
+  updateLiveHeat();
+}
+
+function answerRating(qId, val) {
+  state.answers[qId] = val;
+  const cat = state.questions[state.currentCat];
+  [1,2,3,4,5].forEach(n => {
+    const btn = document.getElementById(`r-${qId}-${n}`);
+    if (btn) btn.className = 'r-btn' + (n===val ? ' selected' : '');
+  });
+  updateCatRag(cat);
+  updateLiveHeat();
+}
+
+function answerNote(qId, val) {
+  state.answers[qId] = val;
+}
+
+function updateCatRag(cat) {
+  const { rag } = computeCatScore(cat);
+  const el = document.getElementById('cat-rag-' + cat.id);
+  if (el) el.className = 'cat-rag ' + (rag === 'neutral' ? '' : rag);
+}
+
+function checkGateAlert(cat) {
+  if (!cat.gate) return;
+  const alertEl = document.getElementById('gate-alert-' + cat.id);
+  if (!alertEl) return;
+  const tripped = cat.questions.some(q => q.gate && (
+    (!q.inverted && state.answers[q.id] === 'no') ||
+    (q.inverted && state.answers[q.id] === 'yes')
+  ));
+  alertEl.style.display = tripped ? 'block' : 'none';
+}
+
+// ── FINISH ────────────────────────────────────────────────────────────────────
+function finishInterview() {
+  const overallNote = document.getElementById('overall-note').value;
+  const cats = state.questions;
+  
+  const catResults = cats.map(cat => {
+    const { score, rag, gateTripped } = computeCatScore(cat);
+    const noteQs = cat.questions.filter(q => q.type === 'note');
+    const noteVal = noteQs.map(q => state.answers[q.id]).filter(Boolean).join(' ');
+    return { ...cat, score: score !== null ? score : 0, rag, gateTripped, note: noteVal };
+  });
+  
+  const gateTripped = catResults.some(c => c.gateTripped);
+  const weightedTotal = catResults.reduce((sum, c) => sum + (c.score * c.weight / 100), 0);
+  const totalScore = Math.round(weightedTotal);
+  
+  let signal, signalReason;
+  if (gateTripped) {
+    signal = 'REJECT';
+    signalReason = 'One or more compliance hard gates triggered. Vendor is automatically disqualified — review gate question responses before proceeding.';
+  } else if (totalScore >= 65) {
+    signal = 'PROCEED';
+    signalReason = `Overall weighted score: ${totalScore}/100. No gate failures. Advance to contracting.`;
+  } else if (totalScore >= 40) {
+    signal = 'HOLD';
+    signalReason = `Overall weighted score: ${totalScore}/100. No gate failures, but score below threshold. Requires leadership review.`;
+  } else {
+    signal = 'REJECT';
+    signalReason = `Overall weighted score: ${totalScore}/100. Score too low. Vendor does not meet minimum requirements.`;
+  }
+  
+  const ev = {
+    id: Date.now().toString(),
+    fn: state.fn,
+    vendorName: state.vendorName,
+    contact: state.contact,
+    date: state.date,
+    evaluator: state.evaluator,
+    companyName: state.companyName,
+    contractScope: state.contractScope,
+    signal,
+    totalScore,
+    catResults,
+    overallNote,
+    answers: state.answers,
+  };
+  
+  saveEval(ev);
+  renderResults(ev);
+}
+
+// ── RESULTS ───────────────────────────────────────────────────────────────────
+function showResult(id) {
+  const ev = loadEvals().find(e => e.id === id);
+  if (ev) renderResults(ev);
+}
+
+function renderResults(ev) {
+  document.getElementById('header-score-bar').style.display = 'none';
+  const fn = FUNCTIONS.find(f => f.id === ev.fn);
+  document.getElementById('res-badge').textContent = `EVALUATED ${ev.date} · ${ev.evaluator || 'Unknown evaluator'}`;
+  document.getElementById('res-vendor').textContent = ev.vendorName;
+  document.getElementById('res-fn').textContent = fn ? fn.name : ev.fn;
+  
+  const banner = document.getElementById('signal-banner');
+  banner.className = 'signal-banner ' + ev.signal.toLowerCase();
+  document.getElementById('signal-icon').textContent = ev.signal === 'PROCEED' ? '✓' : ev.signal === 'HOLD' ? '⏸' : '✕';
+  document.getElementById('signal-label').textContent = ev.signal;
+  document.getElementById('signal-reason').textContent = ev.signalReason || (
+    ev.signal === 'PROCEED' ? `Weighted score: ${ev.totalScore}/100. No gate failures.` :
+    ev.signal === 'HOLD' ? `Weighted score: ${ev.totalScore}/100. Requires review.` :
+    `Weighted score: ${ev.totalScore}/100. Disqualified.`
+  );
+
+  document.getElementById('heatmap-full').innerHTML = ev.catResults.map(cat => `
+    <div class="hm-cell ${cat.rag}">
+      ${cat.gateTripped ? '<div class="gate-flag">GATE</div>' : ''}
+      <div class="hm-cat">${cat.short}</div>
+      <div class="hm-score">${cat.score}</div>
+      <div class="hm-rag">${cat.rag.toUpperCase()}</div>
+      <div class="hm-bar-track"><div class="hm-bar-fill" style="width:${cat.score}%"></div></div>
+    </div>`).join('');
+
+  document.getElementById('cat-breakdown').innerHTML = ev.catResults.map(cat => `
+    <div class="cb-row ${cat.rag}">
+      <div class="cb-rag ${cat.rag}"></div>
+      <div class="cb-name">${cat.name} <span style="font-size:10px;color:var(--muted);font-family:var(--mono)">(${cat.weight}%)</span></div>
+      <div class="cb-note">${cat.note || ''}</div>
+      <div class="cb-score">${cat.score}</div>
+    </div>`).join('');
+
+  // Show/hide contract button based on PROCEED signal
+  const actions = document.getElementById('result-actions');
+  const contractBtn = ev.signal === 'PROCEED' 
+    ? `<button class="action-btn contract" onclick="generateContract()">📄 Generate Underpinning Contract (PDF)</button>`
+    : '';
+  actions.innerHTML = `
+    <button class="action-btn primary" onclick="exportEvalPDF()">↓ Export Evaluation Card (PDF)</button>
+    ${contractBtn}
+    <button class="action-btn" onclick="newEval()">+ New evaluation</button>
+    <button class="action-btn" onclick="goHome()">← All evaluations</button>
+  `;
+
+  window._currentEval = ev;
+  showScreen('results');
+}
+
+// ── EVAL PDF EXPORT ───────────────────────────────────────────────────────────
+function exportEvalPDF() {
+  const ev = window._currentEval;
+  if (!ev) return;
+  const fn = FUNCTIONS.find(f => f.id === ev.fn);
+  const signalColor = ev.signal === 'PROCEED' ? '#16a34a' : ev.signal === 'HOLD' ? '#d97706' : '#dc2626';
+  
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 12px; color: #1a1a2e; margin: 0; padding: 32px; }
+    .cover { border-bottom: 3px solid #1b3f7a; padding-bottom: 20px; margin-bottom: 24px; }
+    .org { font-size: 11px; color: #7c839c; margin-bottom: 6px; }
+    .title { font-size: 26px; font-weight: bold; color: #1b3f7a; margin-bottom: 4px; }
+    .fn { font-size: 14px; color: #4f8ef7; margin-bottom: 16px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .meta-item { background: #f4f6fb; border-radius: 6px; padding: 8px 12px; }
+    .meta-label { font-size: 9px; color: #7c839c; font-weight: bold; margin-bottom: 2px; }
+    .meta-val { font-size: 12px; color: #1a1a2e; }
+    .signal { background: ${ev.signal === 'PROCEED' ? '#dcfce7' : ev.signal === 'HOLD' ? '#fef3c7' : '#fee2e2'}; border: 2px solid ${signalColor}; border-radius: 8px; padding: 16px 20px; margin: 20px 0; display: flex; align-items: center; gap: 14px; }
+    .sig-label { font-size: 22px; font-weight: bold; color: ${signalColor}; }
+    .sig-reason { font-size: 12px; color: #555; margin-top: 3px; }
+    .section-title { font-size: 10px; font-weight: bold; color: #7c839c; letter-spacing: .08em; text-transform: uppercase; margin: 20px 0 10px; }
+    .hm-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin-bottom: 20px; }
+    .hm-cell { border-radius: 8px; padding: 12px 6px; text-align: center; }
+    .hm-cell.green { background: #dcfce7; border: 1px solid #86efac; }
+    .hm-cell.amber { background: #fef3c7; border: 1px solid #fcd34d; }
+    .hm-cell.red { background: #fee2e2; border: 1px solid #fca5a5; }
+    .hm-cat { font-size: 8px; color: #6b7280; margin-bottom: 6px; font-weight: bold; }
+    .hm-score { font-size: 22px; font-weight: bold; margin-bottom: 3px; }
+    .hm-cell.green .hm-score { color: #16a34a; }
+    .hm-cell.amber .hm-score { color: #d97706; }
+    .hm-cell.red .hm-score { color: #dc2626; }
+    .hm-rag { font-size: 8px; font-weight: bold; }
+    .hm-cell.green .hm-rag { color: #16a34a; }
+    .hm-cell.amber .hm-rag { color: #d97706; }
+    .hm-cell.red .hm-rag { color: #dc2626; }
+    .cat-row { display: flex; align-items: center; gap: 12px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+    .c-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .c-dot.green { background: #16a34a; }
+    .c-dot.amber { background: #d97706; }
+    .c-dot.red { background: #dc2626; }
+    .c-name { flex: 1; font-size: 12px; }
+    .c-note { font-size: 11px; color: #6b7280; font-style: italic; flex: 1; }
+    .c-score { font-size: 15px; font-weight: bold; }
+    .cat-row.green .c-score { color: #16a34a; }
+    .cat-row.amber .c-score { color: #d97706; }
+    .cat-row.red .c-score { color: #dc2626; }
+    .footer { margin-top: 32px; border-top: 1px solid #e5e7eb; padding-top: 12px; font-size: 10px; color: #9ca3af; display: flex; justify-content: space-between; }
+    .watermark { color: #dc2626; font-weight: bold; }
+    .gate-note { background: #fee2e2; border-left: 4px solid #dc2626; padding: 10px 14px; border-radius: 0 6px 6px 0; margin-top: 8px; font-size: 11px; color: #7f1d1d; display: ${ev.catResults.some(c=>c.gateTripped) ? 'block' : 'none'}; }
+  </style></head><body>
+  <div class="cover">
+    <div class="org">SEA&#8482; SUPPLIER EVALUATION ASSESSMENT &mdash; CONFIDENTIAL</div>
+    <div class="title">${ev.vendorName}</div>
+    <div class="fn">${fn ? fn.name : ev.fn}</div>
+    <div class="meta-grid">
+      <div class="meta-item"><div class="meta-label">Date</div><div class="meta-val">${ev.date}</div></div>
+      <div class="meta-item"><div class="meta-label">Evaluator</div><div class="meta-val">${ev.evaluator || '—'}</div></div>
+      <div class="meta-item"><div class="meta-label">Contact</div><div class="meta-val">${ev.contact || '—'}</div></div>
+      <div class="meta-item"><div class="meta-label">Total Score</div><div class="meta-val"><strong>${ev.totalScore} / 100</strong></div></div>
+    </div>
+  </div>
+  <div class="signal">
+    <div style="font-size:24px">${ev.signal === 'PROCEED' ? '✓' : ev.signal === 'HOLD' ? '⏸' : '✕'}</div>
+    <div><div class="sig-label">${ev.signal}</div><div class="sig-reason">${ev.signal === 'PROCEED' ? 'Weighted score above threshold. No gate failures. Advance to contracting.' : ev.signal === 'HOLD' ? 'Score below threshold. No gate failures. Requires leadership review.' : 'Auto-disqualified. Gate failure or score too low.'}</div></div>
+  </div>
+  <div class="gate-note">⚠ Hard gate triggered on one or more compliance categories. This vendor is automatically disqualified — review gate question responses before taking further action.</div>
+  <div class="section-title">Heatmap — layered view</div>
+  <div class="hm-grid">${ev.catResults.map(cat=>`<div class="hm-cell ${cat.rag}"><div class="hm-cat">${cat.short}</div><div class="hm-score">${cat.score}</div><div class="hm-rag">${cat.rag.toUpperCase()}</div></div>`).join('')}</div>
+  <div class="section-title">Category breakdown</div>
+  ${ev.catResults.map(cat=>`<div class="cat-row ${cat.rag}"><div class="c-dot ${cat.rag}"></div><div class="c-name">${cat.name} (${cat.weight}%)</div><div class="c-note">${cat.note||''}</div><div class="c-score">${cat.score}</div></div>`).join('')}
+  ${ev.overallNote ? `<div class="section-title">Evaluator note</div><div style="background:#f4f6fb;border-radius:8px;padding:14px;font-size:12px;line-height:1.6;font-style:italic">${ev.overallNote}</div>` : ''}
+  <div class="footer">
+    <span class="watermark">CONFIDENTIAL &mdash; Exported by: ${ev.evaluator || 'Unknown'} &middot; ${new Date().toLocaleDateString()}</span>
+    <span>SEA&#8482; Supplier Evaluation Assessment v2.0</span>
+  </div>
+  </body></html>`;
+  
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SEA_Eval_${ev.vendorName.replace(/\s+/g,'_')}_${ev.date}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── UNDERPINNING CONTRACT GENERATOR ──────────────────────────────────────────
+function generateContract() {
+  const ev = window._currentEval;
+  if (!ev) return;
+  const fn = FUNCTIONS.find(f => f.id === ev.fn);
+  const fnName = fn ? fn.name : ev.fn;
+  const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const evalDate = ev.date;
+  const companyName = ev.companyName || '[CLIENT COMPANY NAME]';
+  const vendorName = ev.vendorName;
+  const contractScope = ev.contractScope || '[SERVICE SCOPE AND VALUE TO BE INSERTED]';
+  const evaluator = ev.evaluator || '[EVALUATOR NAME]';
+
+  // Build SLA table based on function
+  const slaMap = {
+    hr: [
+      ['Payroll processing accuracy', '&lt;0.1% error rate per payroll run', 'Credit equal to 10% of monthly fee per breach'],
+      ['Statutory filing deadlines', '100% on-time filing', 'Vendor bears all fines and penalties incurred'],
+      ['Query response time', 'Within 4 business hours', 'Service credit: $50 per day of non-compliance'],
+      ['Monthly compliance report', 'Delivered by 5th of following month', 'Service credit: $100 per late report'],
+    ],
+    finance: [
+      ['Month-end close package', 'Delivered by 10th business day', 'Service credit: 5% of monthly fee per day late'],
+      ['Tax filing deadlines', '100% on-time filing', 'Vendor bears all penalties and interest incurred'],
+      ['Query response time', 'Within 4 business hours', 'Service credit: $50 per day of non-compliance'],
+      ['Error correction turnaround', 'Within 2 business days', 'Service credit: $100 per breach'],
+    ],
+    it: [
+      ['System uptime', '99.5% monthly average', 'Service credit: 10% of monthly fee per 0.5% below SLA'],
+      ['Critical incident response', 'Within 1 hour', 'Service credit: $200 per breach'],
+      ['High-priority ticket resolution', 'Within 4 business hours', 'Service credit: $100 per breach'],
+      ['Monthly IT health report', 'Delivered by 5th of month', 'Service credit: $50 per late report'],
+    ],
+    legal: [
+      ['Contract review turnaround', 'Within 3 business days', 'Service credit: $150 per day over SLA'],
+      ['Urgent legal query response', 'Within 2 business hours', 'Service credit: $100 per breach'],
+      ['Regulatory alert notification', 'Within 24 hours of change', 'Service credit: $50 per missed notification'],
+      ['Matter status update', 'Weekly for active matters', 'Service credit: $50 per missed update'],
+    ],
+    marketing: [
+      ['Campaign go-live schedule', 'As per agreed campaign calendar', 'Service credit: 10% of campaign fee per week late'],
+      ['Monthly performance report', 'Delivered by 5th of following month', 'Service credit: $100 per late report'],
+      ['Ad account access revocation', 'Within 48 hours of engagement close', 'Vendor liable for all costs from unrevoked access'],
+      ['Content compliance review', '100% of content reviewed before publication', 'Vendor liable for all regulatory fines incurred'],
+    ],
+    ops: [
+      ['Weekly status report delivery', 'Every Monday by 9 AM', 'Service credit: $50 per late report'],
+      ['Incident escalation response', 'Within 2 hours of incident', 'Service credit: $100 per breach'],
+      ['New location onboarding', 'Per agreed project timeline', 'Service credit: 5% of monthly fee per week late'],
+      ['SOP documentation delivery', 'Within 30 days of engagement start', 'Service credit: $200 per week late'],
+    ],
+  };
+
+  const slaRows = (slaMap[ev.fn] || slaMap.ops).map(([metric, target, remedy]) => 
+    `<tr><td>${metric}</td><td>${target}</td><td>${remedy}</td></tr>`
+  ).join('');
+
+  // Compliance commitments from evaluation
+  const gateQs = [];
+  if (ev.answers) {
+    Object.entries(ev.answers).forEach(([qId, ans]) => {
+      if (ans === 'yes') {
+        // Find the question
+        const allCats = [...(CORE_QUESTIONS[Object.keys(CORE_QUESTIONS)[0]] || [])];
+        // Simple: note compliance confirmations
+      }
+    });
+  }
+
+  const contractHTML = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Underpinning Contract — ${vendorName}</title>
+<style>
+  @page { margin: 2.5cm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #1a1a1a; line-height: 1.6; margin: 0; padding: 40px; max-width: 900px; margin: 0 auto; }
+  .header { text-align: center; border-bottom: 3px double #1b3f7a; padding-bottom: 20px; margin-bottom: 30px; }
+  .doc-label { font-size: 9pt; letter-spacing: 0.15em; color: #666; text-transform: uppercase; margin-bottom: 8px; }
+  .doc-title { font-size: 20pt; font-weight: bold; color: #1b3f7a; margin-bottom: 4px; }
+  .doc-subtitle { font-size: 12pt; color: #444; margin-bottom: 16px; }
+  .parties-box { background: #f8f9fc; border: 1px solid #dde1ed; border-radius: 6px; padding: 16px 20px; margin-bottom: 24px; display: flex; gap: 40px; }
+  .party { flex: 1; }
+  .party-label { font-size: 8pt; font-weight: bold; letter-spacing: 0.1em; color: #7c839c; text-transform: uppercase; margin-bottom: 4px; }
+  .party-name { font-size: 13pt; font-weight: bold; color: #1a1a1a; }
+  .party-role { font-size: 10pt; color: #666; }
+  h2 { font-size: 12pt; font-weight: bold; color: #1b3f7a; border-bottom: 1px solid #dde1ed; padding-bottom: 4px; margin-top: 28px; margin-bottom: 12px; letter-spacing: 0.02em; }
+  h3 { font-size: 11pt; font-weight: bold; color: #333; margin-top: 16px; margin-bottom: 6px; }
+  p { margin-bottom: 10px; text-align: justify; }
+  ol { padding-left: 20px; margin-bottom: 10px; }
+  ol li { margin-bottom: 6px; }
+  ul { padding-left: 20px; margin-bottom: 10px; }
+  ul li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 10pt; }
+  th { background: #1b3f7a; color: #fff; padding: 8px 10px; text-align: left; font-size: 9pt; font-weight: bold; letter-spacing: 0.05em; }
+  td { border: 1px solid #dde1ed; padding: 8px 10px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8f9fc; }
+  .highlight-box { background: #fff8e1; border-left: 4px solid #f59e0b; padding: 10px 14px; margin: 14px 0; border-radius: 0 6px 6px 0; font-size: 10pt; }
+  .gate-box { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 10px 14px; margin: 14px 0; border-radius: 0 6px 6px 0; font-size: 10pt; }
+  .signature-block { margin-top: 40px; }
+  .sig-row { display: flex; gap: 60px; margin-top: 30px; }
+  .sig-col { flex: 1; }
+  .sig-line { border-bottom: 1px solid #333; margin-bottom: 6px; height: 40px; }
+  .sig-label { font-size: 9pt; color: #666; }
+  .sig-name { font-size: 10pt; font-weight: bold; margin-top: 4px; }
+  .footer { margin-top: 40px; border-top: 1px solid #dde1ed; padding-top: 12px; font-size: 8pt; color: #999; display: flex; justify-content: space-between; }
+  .stamp { display: inline-block; border: 2px solid #16a34a; color: #16a34a; font-weight: bold; font-size: 9pt; padding: 3px 10px; border-radius: 4px; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .eval-ref { background: #f4f6fb; border: 1px solid #dde1ed; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; font-size: 10pt; }
+  .eval-ref-label { font-size: 8pt; font-weight: bold; letter-spacing: 0.1em; color: #7c839c; text-transform: uppercase; margin-bottom: 6px; }
+  .score-badge { display: inline-block; background: #dcfce7; border: 1px solid #86efac; color: #16a34a; font-weight: bold; padding: 2px 10px; border-radius: 20px; font-size: 10pt; margin-left: 8px; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="doc-label">SEA&#8482; Supplier Evaluation Assessment &mdash; Post-Selection Document</div>
+  <div class="doc-title">UNDERPINNING CONTRACT</div>
+  <div class="doc-subtitle">${fnName} Services Agreement</div>
+  <div style="font-size:10pt;color:#888;margin-top:8px;">Effective Date: ${today} &nbsp;|&nbsp; Reference: UC-${ev.id.slice(-6)}</div>
+</div>
+
+<div class="parties-box">
+  <div class="party">
+    <div class="party-label">Client ("Company")</div>
+    <div class="party-name">${companyName}</div>
+    <div class="party-role">Contracting Party — Service Recipient</div>
+  </div>
+  <div class="party">
+    <div class="party-label">Supplier ("Vendor")</div>
+    <div class="party-name">${vendorName}</div>
+    <div class="party-role">Service Provider — ${fnName}</div>
+  </div>
+</div>
+
+<div class="eval-ref">
+  <div class="eval-ref-label">SEA™ Evaluation Reference</div>
+  This contract is issued following a structured Supplier Evaluation Assessment conducted on <strong>${evalDate}</strong> by <strong>${evaluator}</strong>.
+  The Supplier achieved a SEA™ score of <span class="score-badge">${ev.totalScore}/100</span> with signal: <strong>PROCEED</strong>.
+  No compliance hard gates were triggered. Scope evaluated: <em>${fnName}</em>.
+</div>
+
+<h2>1. DEFINITIONS AND INTERPRETATION</h2>
+<ol>
+  <li><strong>"Agreement"</strong> means this Underpinning Contract together with all Schedules and Exhibits attached hereto.</li>
+  <li><strong>"Services"</strong> means the ${fnName} services described in Schedule A to this Agreement.</li>
+  <li><strong>"Confidential Information"</strong> means all non-public business, financial, technical, and operational information disclosed by either party under this Agreement.</li>
+  <li><strong>"SLA"</strong> means the Service Level Agreement set out in Schedule B, defining performance standards and remedies.</li>
+  <li><strong>"Data"</strong> means all personal data, financial records, and proprietary information processed by Vendor on Company's behalf.</li>
+  <li><strong>"SEA™ Evaluation"</strong> means the Supplier Evaluation Assessment conducted using the SEA™ framework prior to contract execution.</li>
+</ol>
+
+<h2>2. SCOPE OF SERVICES</h2>
+<p>The Vendor agrees to provide ${fnName} services to the Company in accordance with the scope, standards, and deliverables set out below and in Schedule A. The contracted scope is: <strong>${contractScope}</strong>.</p>
+<ol>
+  <li>Vendor shall deliver all Services in compliance with the standards, methodologies, and commitments confirmed during the SEA™ Evaluation process dated ${evalDate}.</li>
+  <li>Any material change to the scope, method of delivery, key personnel, tooling, or sub-contractors must be notified in writing to the Company with no less than 30 days prior notice and requires written Company approval.</li>
+  <li>Vendor shall not sub-contract any part of the Services to a third party without prior written consent from the Company. Where sub-contractors are permitted, Vendor remains fully liable for their performance and compliance.</li>
+  <li>Vendor shall maintain at least the same level of resources, tools, and qualified personnel as represented during the SEA™ Evaluation for the duration of this Agreement.</li>
+</ol>
+
+<h2>3. TERM AND TERMINATION</h2>
+<ol>
+  <li><strong>Initial Term:</strong> This Agreement commences on ${today} and continues for an initial period of twelve (12) months, unless terminated earlier in accordance with this clause.</li>
+  <li><strong>Renewal:</strong> This Agreement will automatically renew for successive twelve-month periods unless either party provides written notice of non-renewal at least sixty (60) days before the end of the then-current term.</li>
+  <li><strong>Termination for Convenience:</strong> Either party may terminate this Agreement for any reason with ninety (90) days written notice to the other party.</li>
+  <li><strong>Termination for Cause:</strong> Company may terminate this Agreement immediately upon written notice if:
+    <ul>
+      <li>Vendor triggers a SEA™ compliance hard gate (i.e., loses required licences, fails to maintain required certifications, or breaches a material compliance obligation);</li>
+      <li>Vendor commits a material breach that remains uncured for more than fifteen (15) business days after written notice;</li>
+      <li>Vendor becomes insolvent, makes an assignment for the benefit of creditors, or a receiver is appointed;</li>
+      <li>A security incident results in unauthorised access to Company Data and Vendor fails to notify or remediate within the agreed timelines.</li>
+    </ul>
+  </li>
+  <li><strong>Exit Obligations:</strong> Upon termination, Vendor shall: (a) deliver all Company Data in a mutually agreed format within 10 business days; (b) cooperate fully with transition to a successor vendor; (c) destroy all copies of Company Data within 30 days of final delivery and provide written certification of destruction.</li>
+</ol>
+
+<h2>4. PERFORMANCE STANDARDS AND SERVICE LEVELS</h2>
+<p>Vendor commits to meet the performance standards set out in the table below. These standards reflect the commitments confirmed during the SEA™ Evaluation process and are incorporated as binding contractual obligations.</p>
+
+<table>
+  <thead><tr><th>Performance Metric</th><th>Target Standard</th><th>Remedy for Breach</th></tr></thead>
+  <tbody>${slaRows}</tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>SLA Credit Process:</strong> Service credits are the Company's primary remedy for SLA breaches and do not limit Company's right to terminate for cause or claim damages for material breach. Credits accumulate monthly and are deducted from the following month's invoice. Vendor must self-report SLA breaches within 5 business days of occurrence.
+</div>
+
+<h2>5. COMPLIANCE AND REGULATORY OBLIGATIONS</h2>
+<div class="gate-box">
+  The following compliance commitments were confirmed as passing during the SEA™ Evaluation (Reference: UC-${ev.id.slice(-6)}). Vendor warrants that these commitments remain true and undertakes to maintain them for the duration of this Agreement.
+</div>
+<ol>
+  <li>Vendor warrants that it holds all licences, registrations, and certifications required to legally provide the Services in all applicable jurisdictions, and shall maintain these throughout the term of this Agreement.</li>
+  <li>Vendor warrants that it will comply with all applicable laws and regulations governing the Services, including but not limited to data protection, employment, health and safety, and sector-specific regulatory requirements.</li>
+  <li>Vendor shall immediately notify Company in writing within 24 hours if any licence, certification, or regulatory standing material to the Services is suspended, revoked, or subject to investigation.</li>
+  <li>Vendor shall maintain professional indemnity, cyber liability, and general liability insurance at the levels confirmed during the SEA™ Evaluation, and shall provide evidence of current coverage upon request.</li>
+  <li>Vendor shall not engage in any activity that would constitute a conflict of interest with the Company without prior written disclosure and approval.</li>
+</ol>
+
+<h2>6. DATA PROTECTION AND SECURITY</h2>
+<ol>
+  <li>Vendor shall process all Company Data solely for the purposes of delivering the Services under this Agreement and in compliance with all applicable data protection laws.</li>
+  <li>Vendor shall implement and maintain the technical and organisational security measures confirmed during the SEA™ Evaluation, including access controls, encryption, and incident response capabilities.</li>
+  <li>Vendor shall notify Company within 24 hours of becoming aware of any actual or suspected security incident, unauthorised access, or data breach affecting Company Data.</li>
+  <li>Upon request, Vendor shall provide Company with evidence of its security practices, including penetration test results, audit reports, and access control documentation.</li>
+  <li>Vendor shall sign and adhere to Company's Data Processing Agreement (DPA), which is incorporated by reference as Schedule C to this Agreement.</li>
+  <li>All Company Data shall be stored and processed within jurisdictions agreed in writing. Transfer of Data outside these jurisdictions requires prior written Company approval.</li>
+</ol>
+
+<h2>7. CONFIDENTIALITY</h2>
+<ol>
+  <li>Each party shall maintain the confidentiality of the other party's Confidential Information and shall not disclose it to any third party without prior written consent.</li>
+  <li>Vendor shall ensure that all personnel with access to Company Confidential Information are bound by written confidentiality obligations no less protective than those in this Agreement.</li>
+  <li>Confidentiality obligations survive termination of this Agreement for a period of five (5) years.</li>
+</ol>
+
+<h2>8. INTELLECTUAL PROPERTY</h2>
+<ol>
+  <li>All work product, deliverables, reports, and materials created by Vendor specifically for Company under this Agreement shall be deemed works made for hire and shall vest in Company upon creation.</li>
+  <li>Vendor retains ownership of pre-existing intellectual property, tools, and methodologies. Vendor grants Company a non-exclusive, royalty-free licence to use such pre-existing IP to the extent embedded in deliverables.</li>
+  <li>Vendor warrants that the Services and deliverables do not infringe any third-party intellectual property rights.</li>
+</ol>
+
+<h2>9. FEES AND PAYMENT</h2>
+<ol>
+  <li>Company shall pay the fees agreed in Schedule A within thirty (30) days of receipt of a valid invoice from Vendor.</li>
+  <li>Vendor shall not increase fees during the initial term without written agreement. For renewal periods, fee increases require sixty (60) days written notice and must not exceed the lesser of 5% or CPI for the preceding 12 months.</li>
+  <li>All out-of-scope work must be agreed in writing with a written fee estimate before commencement. Company shall not be liable for any out-of-scope charges not pre-approved in writing.</li>
+  <li>Disputed invoices shall be escalated immediately. Company may withhold undisputed portions while a dispute is resolved. Interest on overdue undisputed amounts: 1.5% per month.</li>
+</ol>
+
+<h2>10. GOVERNANCE AND REPORTING</h2>
+<ol>
+  <li>Vendor shall provide a dedicated named point of contact (SPOC) for operational matters and a senior escalation contact for governance matters, as confirmed during the SEA™ Evaluation.</li>
+  <li>Vendor shall deliver all reports specified in Schedule B on the agreed schedule. Persistent failure to deliver required reports shall constitute a material breach.</li>
+  <li>The parties shall conduct a formal Quarterly Business Review (QBR) to review performance, risks, issues, and the forward plan. Either party may call an emergency review if a critical issue arises.</li>
+  <li>Vendor shall maintain accurate records of all services performed, materials used, and hours logged under this Agreement, and shall provide access to these records for audit purposes upon reasonable notice.</li>
+</ol>
+
+<h2>11. WARRANTIES AND REPRESENTATIONS</h2>
+<p>Vendor represents and warrants that:</p>
+<ol>
+  <li>It has full authority to enter into this Agreement and perform the Services.</li>
+  <li>All information provided during the SEA™ Evaluation was accurate and complete, and Vendor shall notify Company immediately of any material change to those representations.</li>
+  <li>The Services will be performed by qualified personnel exercising reasonable skill and care consistent with applicable professional standards.</li>
+  <li>It has no existing agreements that conflict with its obligations under this Agreement.</li>
+  <li>It will comply with all applicable anti-bribery, anti-corruption, and anti-money-laundering laws.</li>
+</ol>
+
+<h2>12. LIMITATION OF LIABILITY AND INDEMNIFICATION</h2>
+<ol>
+  <li>Each party's aggregate liability under this Agreement shall not exceed the total fees paid or payable in the twelve (12) months immediately preceding the event giving rise to the claim.</li>
+  <li>Neither party shall be liable for indirect, consequential, special, or punitive damages, except in cases of gross negligence, wilful misconduct, or breach of confidentiality or data protection obligations.</li>
+  <li>Vendor shall indemnify and hold Company harmless from any third-party claims, losses, fines, or penalties arising from: (a) Vendor's breach of this Agreement; (b) Vendor's violation of applicable law; (c) Vendor's negligence or wilful misconduct; (d) infringement of third-party intellectual property rights by Vendor's deliverables.</li>
+</ol>
+
+<h2>13. DISPUTE RESOLUTION</h2>
+<ol>
+  <li>The parties shall attempt to resolve any dispute informally through good-faith negotiation within fifteen (15) business days of written notice of the dispute.</li>
+  <li>If not resolved informally, disputes shall be submitted to mediation before a mutually agreed mediator. Costs of mediation to be shared equally.</li>
+  <li>If mediation fails, disputes shall be resolved by binding arbitration under the rules of the American Arbitration Association (AAA) in [City, State], applying the laws of [State].</li>
+  <li>Nothing in this clause prevents either party from seeking emergency injunctive relief from a court of competent jurisdiction.</li>
+</ol>
+
+<h2>14. GENERAL PROVISIONS</h2>
+<ol>
+  <li><strong>Entire Agreement:</strong> This Agreement, together with all Schedules, constitutes the entire agreement between the parties and supersedes all prior discussions, representations, and agreements.</li>
+  <li><strong>Amendments:</strong> This Agreement may only be amended by a written document signed by authorised representatives of both parties.</li>
+  <li><strong>Waiver:</strong> Failure to enforce any provision shall not constitute a waiver of future enforcement rights.</li>
+  <li><strong>Severability:</strong> If any provision is found invalid or unenforceable, the remaining provisions continue in full force and effect.</li>
+  <li><strong>Force Majeure:</strong> Neither party shall be in breach for failure to perform due to causes beyond their reasonable control, provided the affected party notifies the other within 48 hours and uses reasonable efforts to mitigate.</li>
+  <li><strong>Notices:</strong> All formal notices shall be in writing and delivered by email with read receipt or by certified mail to the addresses specified in Schedule A.</li>
+  <li><strong>Governing Law:</strong> This Agreement is governed by the laws of the State of [State], without regard to its conflict of law provisions.</li>
+</ol>
+
+<div class="signature-block">
+  <h2>EXECUTION</h2>
+  <p>The parties have executed this Underpinning Contract as of the Effective Date stated above. Each signatory represents that they have authority to bind their respective organisation.</p>
+  
+  <div class="sig-row">
+    <div class="sig-col">
+      <div class="party-label" style="font-size:9pt;color:#666;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">For and on behalf of <strong>${companyName}</strong></div>
+      <div class="sig-line"></div>
+      <div class="sig-label">Authorised Signatory</div>
+      <div class="sig-name">Name: _______________________________</div>
+      <div class="sig-label">Title: ________________________________</div>
+      <div class="sig-label">Date: _________________________________</div>
+    </div>
+    <div class="sig-col">
+      <div class="party-label" style="font-size:9pt;color:#666;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">For and on behalf of <strong>${vendorName}</strong></div>
+      <div class="sig-line"></div>
+      <div class="sig-label">Authorised Signatory</div>
+      <div class="sig-name">Name: _______________________________</div>
+      <div class="sig-label">Title: ________________________________</div>
+      <div class="sig-label">Date: _________________________________</div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:40px;background:#f8f9fc;border:1px solid #dde1ed;border-radius:8px;padding:20px;">
+  <h2 style="margin-top:0">SCHEDULE A — SERVICE SCOPE & COMMERCIAL TERMS</h2>
+  <table>
+    <tr><th>Field</th><th>Detail</th></tr>
+    <tr><td>Supplier</td><td>${vendorName}</td></tr>
+    <tr><td>Service Function</td><td>${fnName}</td></tr>
+    <tr><td>Contract Scope / Value</td><td>${contractScope}</td></tr>
+    <tr><td>Effective Date</td><td>${today}</td></tr>
+    <tr><td>SEA™ Evaluation Date</td><td>${evalDate}</td></tr>
+    <tr><td>Evaluator</td><td>${evaluator}</td></tr>
+    <tr><td>SEA™ Score</td><td>${ev.totalScore}/100 — PROCEED</td></tr>
+    <tr><td>Supplier Contact</td><td>${ev.contact || '[TO BE INSERTED]'}</td></tr>
+    <tr><td>Notice Address — Company</td><td>[TO BE INSERTED]</td></tr>
+    <tr><td>Notice Address — Supplier</td><td>[TO BE INSERTED]</td></tr>
+  </table>
+  <p style="font-size:10pt;color:#666;margin-top:8px;margin-bottom:0;">Detailed service description, deliverables schedule, and payment terms to be attached as Exhibit A-1 before execution.</p>
+</div>
+
+<div style="margin-top:24px;background:#f8f9fc;border:1px solid #dde1ed;border-radius:8px;padding:20px;">
+  <h2 style="margin-top:0">SCHEDULE B — SERVICE LEVEL AGREEMENT (SLA)</h2>
+  <p style="font-size:10pt;">The SLA targets in Section 4 apply from the commencement date. Reporting on SLA performance shall be included in the monthly report referenced in Section 10. The QBR shall include a formal SLA review each quarter.</p>
+  <p style="font-size:10pt;margin-bottom:0;"><em>Parties may negotiate and append additional SLA metrics specific to the agreed service scope as Exhibit B-1 before execution.</em></p>
+</div>
+
+<div class="footer">
+  <span>SEA&#8482; Underpinning Contract &mdash; UC-${ev.id.slice(-6)} &mdash; ${fnName} &mdash; ${vendorName}</span>
+  <span>Generated ${today} &mdash; CONFIDENTIAL</span>
+</div>
+
+</body>
+</html>`;
+
+  const blob = new Blob([contractHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `UC_${ev.vendorName.replace(/\s+/g,'_')}_${fnName.replace(/\s+/g,'_')}_${ev.date}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderHome();
+</script>
+</body>
+</html>
