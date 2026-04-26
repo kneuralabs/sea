@@ -283,6 +283,27 @@ main{padding:var(--sp7) var(--sp6);max-width:1120px;margin:0 auto;width:100%;}
   .nav-btn{width:100%;text-align:center;}
   .heatmap-full{grid-template-columns:repeat(2,1fr);}
 }
+
+/* dark mode */
+@media (prefers-color-scheme: dark) { :root:not(.light) {
+  --kn-bg:#111110;--kn-surface:#1C1C1B;--kn-ink:#F0F0EF;
+  --kn-ink-2:#A8A8A4;--kn-ink-3:#6B6B68;--kn-line:#2C2C2B;
+  --kn-line-md:#3C3C3B;--kn-fill:#222221;
+  --kn-go:#2D9B5D;--kn-go-bg:#0F2318;--kn-go-line:#1D4D30;
+  --kn-hold:#B88D00;--kn-hold-bg:#2A2208;--kn-hold-line:#4D3E00;
+  --kn-stop:#C94040;--kn-stop-bg:#2A0F0F;--kn-stop-line:#4D2020;
+}}
+:root.dark {
+  --kn-bg:#111110;--kn-surface:#1C1C1B;--kn-ink:#F0F0EF;
+  --kn-ink-2:#A8A8A4;--kn-ink-3:#6B6B68;--kn-line:#2C2C2B;
+  --kn-line-md:#3C3C3B;--kn-fill:#222221;
+  --kn-go:#2D9B5D;--kn-go-bg:#0F2318;--kn-go-line:#1D4D30;
+  --kn-hold:#B88D00;--kn-hold-bg:#2A2208;--kn-hold-line:#4D3E00;
+  --kn-stop:#C94040;--kn-stop-bg:#2A0F0F;--kn-stop-line:#4D2020;
+}
+.theme-toggle{background:transparent;border:none;cursor:pointer;padding:4px;color:var(--kn-ink-2);display:flex;align-items:center;justify-content:center;border-radius:var(--kn-r);transition:color 120ms;}
+.theme-toggle:hover{color:var(--kn-ink);}
+.theme-toggle svg{width:16px;height:16px;fill:currentColor;}
 </style>
 </head>
 <body>
@@ -306,6 +327,9 @@ main{padding:var(--sp7) var(--sp6);max-width:1120px;margin:0 auto;width:100%;}
       <div class="header-signal-pill" id="header-signal-pill"></div>
     </div>
     <div class="header-tag">v2.0</div>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode" aria-label="Toggle theme">
+      <svg id="theme-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+    </button>
   </header>
   <main>
 
@@ -1304,7 +1328,29 @@ function exportEvalPDF() {
     <span class="watermark">CONFIDENTIAL &mdash; Exported by: ${ev.evaluator || 'Unknown'} &middot; ${new Date().toLocaleDateString()}</span>
     <span>KNEURALABS LLC — Structural AI Governance — SEA&#8482; v2.0</span>
   </div>
-  </body></html>`;
+  <script>
+(function(){
+  var root=document.documentElement;
+  var stored=localStorage.getItem('kn-theme');
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var dark=(stored==='dark')||(stored===null&&prefersDark);
+  if(dark)root.classList.add('dark');
+  else root.classList.add('light');
+  document.getElementById('theme-toggle').addEventListener('click',function(){
+    var isDark=root.classList.contains('dark');
+    root.classList.toggle('dark',!isDark);
+    root.classList.toggle('light',isDark);
+    localStorage.setItem('kn-theme',isDark?'light':'dark');
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+    if(!localStorage.getItem('kn-theme')){
+      root.classList.toggle('dark',e.matches);
+      root.classList.toggle('light',!e.matches);
+    }
+  });
+})();
+</script>
+</body></html>`;
   
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
