@@ -33,7 +33,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:16px;-webkit-font-smoothing:antialiased;}
-body{background:var(--kn-bg);color:var(--kn-ink);font-family:var(--kn-font);font-weight:400;min-height:100vh;line-height:1.5;}
+body{background:var(--kn-bg);color:var(--kn-ink);transition:background .15s,color .15s;font-family:var(--kn-font);font-weight:400;min-height:100vh;line-height:1.5;}
 :focus-visible{outline:1.5px solid var(--kn-ink);outline-offset:2px;border-radius:2px;}
 .app{display:grid;grid-template-rows:56px 1fr;min-height:100vh;}
 
@@ -286,20 +286,20 @@ main{padding:var(--sp7) var(--sp6);max-width:1120px;margin:0 auto;width:100%;}
 
 /* dark mode */
 @media (prefers-color-scheme: dark) { :root:not(.light) {
-  --kn-bg:#111110;--kn-surface:#1C1C1B;--kn-ink:#F0F0EF;
-  --kn-ink-2:#A8A8A4;--kn-ink-3:#6B6B68;--kn-line:#2C2C2B;
-  --kn-line-md:#3C3C3B;--kn-fill:#222221;
-  --kn-go:#2D9B5D;--kn-go-bg:#0F2318;--kn-go-line:#1D4D30;
-  --kn-hold:#B88D00;--kn-hold-bg:#2A2208;--kn-hold-line:#4D3E00;
-  --kn-stop:#C94040;--kn-stop-bg:#2A0F0F;--kn-stop-line:#4D2020;
+  --kn-bg:#0E0E0D;--kn-surface:#1E1E1D;--kn-ink:#EFEFEE;
+  --kn-ink-2:#A0A09C;--kn-ink-3:#707070;--kn-line:#323230;
+  --kn-line-md:#484846;--kn-fill:#282827;
+  --kn-go:#30A862;--kn-go-bg:#0D2218;--kn-go-line:#1E5232;
+  --kn-hold:#C49A00;--kn-hold-bg:#292208;--kn-hold-line:#524000;
+  --kn-stop:#CC4444;--kn-stop-bg:#280E0E;--kn-stop-line:#502020;
 }}
 :root.dark {
-  --kn-bg:#111110;--kn-surface:#1C1C1B;--kn-ink:#F0F0EF;
-  --kn-ink-2:#A8A8A4;--kn-ink-3:#6B6B68;--kn-line:#2C2C2B;
-  --kn-line-md:#3C3C3B;--kn-fill:#222221;
-  --kn-go:#2D9B5D;--kn-go-bg:#0F2318;--kn-go-line:#1D4D30;
-  --kn-hold:#B88D00;--kn-hold-bg:#2A2208;--kn-hold-line:#4D3E00;
-  --kn-stop:#C94040;--kn-stop-bg:#2A0F0F;--kn-stop-line:#4D2020;
+  --kn-bg:#0E0E0D;--kn-surface:#1E1E1D;--kn-ink:#EFEFEE;
+  --kn-ink-2:#A0A09C;--kn-ink-3:#707070;--kn-line:#323230;
+  --kn-line-md:#484846;--kn-fill:#282827;
+  --kn-go:#30A862;--kn-go-bg:#0D2218;--kn-go-line:#1E5232;
+  --kn-hold:#C49A00;--kn-hold-bg:#292208;--kn-hold-line:#524000;
+  --kn-stop:#CC4444;--kn-stop-bg:#280E0E;--kn-stop-line:#502020;
 }
 .theme-toggle{background:transparent;border:none;cursor:pointer;padding:4px;color:var(--kn-ink-2);display:flex;align-items:center;justify-content:center;border-radius:var(--kn-r);transition:color 120ms;}
 .theme-toggle:hover{color:var(--kn-ink);}
