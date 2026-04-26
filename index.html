@@ -1328,28 +1328,6 @@ function exportEvalPDF() {
     <span class="watermark">CONFIDENTIAL &mdash; Exported by: ${ev.evaluator || 'Unknown'} &middot; ${new Date().toLocaleDateString()}</span>
     <span>KNEURALABS LLC — Structural AI Governance — SEA&#8482; v2.0</span>
   </div>
-  <script>
-(function(){
-  var root=document.documentElement;
-  var stored=localStorage.getItem('kn-theme');
-  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-  var dark=(stored==='dark')||(stored===null&&prefersDark);
-  if(dark)root.classList.add('dark');
-  else root.classList.add('light');
-  document.getElementById('theme-toggle').addEventListener('click',function(){
-    var isDark=root.classList.contains('dark');
-    root.classList.toggle('dark',!isDark);
-    root.classList.toggle('light',isDark);
-    localStorage.setItem('kn-theme',isDark?'light':'dark');
-  });
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
-    if(!localStorage.getItem('kn-theme')){
-      root.classList.toggle('dark',e.matches);
-      root.classList.toggle('light',!e.matches);
-    }
-  });
-})();
-</script>
 </body></html>`;
   
   const blob = new Blob([html], { type: 'text/html' });
@@ -1738,6 +1716,28 @@ Write only the narrative paragraph. No headers, no bullet points, no preamble.`;
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 renderHome();
+</script>
+<script>
+(function(){
+  var root=document.documentElement;
+  var stored=localStorage.getItem('kn-theme');
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var dark=(stored==='dark')||(stored===null&&prefersDark);
+  if(dark)root.classList.add('dark');
+  else root.classList.add('light');
+  document.getElementById('theme-toggle').addEventListener('click',function(){
+    var isDark=root.classList.contains('dark');
+    root.classList.toggle('dark',!isDark);
+    root.classList.toggle('light',isDark);
+    localStorage.setItem('kn-theme',isDark?'light':'dark');
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+    if(!localStorage.getItem('kn-theme')){
+      root.classList.toggle('dark',e.matches);
+      root.classList.toggle('light',!e.matches);
+    }
+  });
+})();
 </script>
 </body>
 </html>
