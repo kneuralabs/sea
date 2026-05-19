@@ -288,13 +288,28 @@ main{padding:var(--sp7) var(--sp6);max-width:1120px;margin:0 auto;width:100%;}
 .hsig-hold{background:var(--kn-hold-bg);color:var(--kn-hold);border:1px solid var(--kn-hold-line);}
 .hsig-reject{background:var(--kn-stop-bg);color:var(--kn-stop);border:1px solid var(--kn-stop-line);}
 
-@media(max-width:680px){
+/* === RESPONSIVE === */
+img{max-width:100%;height:auto;}
+
+/* Tablet portrait & small laptop */
+@media(max-width:1023px){
+  main{padding:var(--sp6) var(--sp5);}
+  .home-grid{grid-template-columns:repeat(2,1fr);}
+  .heatmap-full{grid-template-columns:repeat(4,1fr);}
+}
+
+/* Mobile landscape / small tablet */
+@media(max-width:768px){
   main{padding:var(--sp5) var(--sp4);}
-  .home-grid{grid-template-columns:1fr;}
+  .home-hero h1{font-size:2rem;}
+  .home-hero p{font-size:.9rem;}
+  .home-grid{grid-template-columns:repeat(2,1fr);}
   .field-row{grid-template-columns:1fr;}
   .heatmap-full{grid-template-columns:repeat(4,1fr);}
   .hm-score{font-size:1.125rem;}
 }
+
+/* Mobile portrait */
 @media(max-width:480px){
   header{padding:0 var(--sp4);gap:var(--sp2);}
   #header-score-bar{display:none !important;}
@@ -305,43 +320,55 @@ main{padding:var(--sp7) var(--sp6);max-width:1120px;margin:0 auto;width:100%;}
   .nav-controls{flex-direction:column;}
   .nav-btn{width:100%;text-align:center;}
   .heatmap-full{grid-template-columns:repeat(2,1fr);}
-}
-
-
-/* responsive enhancements */
-img{max-width:100%;height:auto;}
-@media(max-width:680px){
-  .home-hero h1{font-size:2rem;}
-  .home-hero p{font-size:.875rem;}
-}
-@media(max-width:480px){
   .home-hero h1{font-size:1.625rem;}
   .header-product{font-size:11px;}
+  .result-actions{flex-direction:column;}
+  .action-btn{width:100%;text-align:center;}
 }
+
+/* Small mobile */
 @media(max-width:380px){
   header{padding:0 12px;}
   .kn-wordmark{font-size:11px;}
   .home-hero h1{font-size:1.375rem;}
 }
+
+/* Landscape phone */
 @media(max-height:480px) and (orientation:landscape){
   .home-hero{margin-bottom:var(--sp5);padding-bottom:var(--sp4);}
+  main{padding:var(--sp4) var(--sp5);}
 }
+
+/* Tablet landscape */
+@media(min-width:768px) and (max-width:1023px) and (orientation:landscape){
+  .home-grid{grid-template-columns:repeat(3,1fr);}
+  .heatmap-full{grid-template-columns:repeat(4,1fr);}
+}
+/* prefers-reduced-motion */
+@media(prefers-reduced-motion:reduce){
+  .screen{animation:none;}
+  .completion-overlay{animation:none;}
+  *{transition-duration:0ms !important;}
+}
+
 /* dark mode */
 @media (prefers-color-scheme: dark) { :root:not(.light) {
-  --kn-bg:#0E0E0D;--kn-surface:#1E1E1D;--kn-ink:#EFEFEE;
-  --kn-ink-2:#A0A09C;--kn-ink-3:#707070;--kn-line:#323230;
-  --kn-line-md:#484846;--kn-fill:#282827;
-  --kn-go:#30A862;--kn-go-bg:#0D2218;--kn-go-line:#1E5232;
-  --kn-hold:#C49A00;--kn-hold-bg:#292208;--kn-hold-line:#524000;
-  --kn-stop:#CC4444;--kn-stop-bg:#280E0E;--kn-stop-line:#502020;
+  --kn-bg:#0D1117;--kn-surface:#161B22;--kn-ink:#E6EDF3;
+  --kn-ink-2:#8B949E;--kn-ink-3:#6E7681;--kn-line:#30363D;
+  --kn-line-md:#484F58;--kn-fill:#21262D;
+  --kn-brand:#4A8BC8;--kn-brand-deep:#1C5CAA;--kn-brand-sky:#6BA3D6;
+  --kn-go:#3FB950;--kn-go-bg:#0D2018;--kn-go-line:#1A5028;
+  --kn-hold:#D29922;--kn-hold-bg:#272012;--kn-hold-line:#524A1A;
+  --kn-stop:#F85149;--kn-stop-bg:#2C1416;--kn-stop-line:#5C1F22;
 }}
 :root.dark {
-  --kn-bg:#0E0E0D;--kn-surface:#1E1E1D;--kn-ink:#EFEFEE;
-  --kn-ink-2:#A0A09C;--kn-ink-3:#707070;--kn-line:#323230;
-  --kn-line-md:#484846;--kn-fill:#282827;
-  --kn-go:#30A862;--kn-go-bg:#0D2218;--kn-go-line:#1E5232;
-  --kn-hold:#C49A00;--kn-hold-bg:#292208;--kn-hold-line:#524000;
-  --kn-stop:#CC4444;--kn-stop-bg:#280E0E;--kn-stop-line:#502020;
+  --kn-bg:#0D1117;--kn-surface:#161B22;--kn-ink:#E6EDF3;
+  --kn-ink-2:#8B949E;--kn-ink-3:#6E7681;--kn-line:#30363D;
+  --kn-line-md:#484F58;--kn-fill:#21262D;
+  --kn-brand:#4A8BC8;--kn-brand-deep:#1C5CAA;--kn-brand-sky:#6BA3D6;
+  --kn-go:#3FB950;--kn-go-bg:#0D2018;--kn-go-line:#1A5028;
+  --kn-hold:#D29922;--kn-hold-bg:#272012;--kn-hold-line:#524A1A;
+  --kn-stop:#F85149;--kn-stop-bg:#2C1416;--kn-stop-line:#5C1F22;
 }
 .theme-toggle{background:transparent;border:none;cursor:pointer;padding:4px;color:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;border-radius:var(--kn-r);transition:color 150ms;}
 .theme-toggle:hover{color:#FFFFFF;}
@@ -954,19 +981,19 @@ function updateHeaderScoreBar() {
   scoreEl.textContent = totalScore !== null ? totalScore : '—';
 
   if (signal === 'PROCEED') {
-    scoreEl.style.color = 'var(--kn-emerald)';
+    scoreEl.style.color = 'var(--kn-go)';
     pillEl.textContent = '✓ PROCEED';
     pillEl.className = 'header-signal-pill hsig-proceed';
   } else if (signal === 'HOLD') {
-    scoreEl.style.color = 'var(--kn-amber-col)';
+    scoreEl.style.color = 'var(--kn-hold)';
     pillEl.textContent = '! HOLD';
     pillEl.className = 'header-signal-pill hsig-hold';
   } else if (signal === 'REJECT') {
-    scoreEl.style.color = 'var(--kn-alert)';
+    scoreEl.style.color = 'var(--kn-stop)';
     pillEl.textContent = '✕ REJECT';
     pillEl.className = 'header-signal-pill hsig-reject';
   } else {
-    scoreEl.style.color = 'var(--kn-navy)';
+    scoreEl.style.color = 'var(--kn-ink)';
     pillEl.textContent = '';
     pillEl.className = 'header-signal-pill';
   }
@@ -1040,7 +1067,7 @@ function renderCategory(idx) {
 function renderQuestion(q) {
   const badge = q.type === 'yn' ? (q.gate ? 'q-gate' : 'q-rating') : q.type === 'rating' ? 'q-rating' : 'q-note';
   const badgeText = q.type === 'yn' ? (q.gate ? '⚠ COMPLIANCE GATE' : 'YES / NO') : q.type === 'rating' ? 'RATING 1–5' : 'QUALITATIVE NOTE';
-  const fnTag = q.fnSpecific ? ' <span style="font-size:10px;background:rgba(14,116,144,.1);color:var(--kn-teal);border:1px solid rgba(14,116,144,.2);border-radius:3px;padding:2px 6px;margin-left:4px;font-weight:600;letter-spacing:.04em;font-family:var(--kn-mono)">FUNCTION-SPECIFIC</span>' : '';
+  const fnTag = q.fnSpecific ? ' <span style="font-size:10px;background:rgba(74,139,200,.1);color:var(--kn-brand-sky);border:1px solid rgba(74,139,200,.2);border-radius:3px;padding:2px 6px;margin-left:4px;font-weight:600;letter-spacing:.04em;font-family:var(--kn-mono)">FUNCTION-SPECIFIC</span>' : '';
   const gateClass = (q.gate) ? ' is-gate' : '';
 
   let input = '';
@@ -1273,7 +1300,7 @@ function renderResults(ev) {
   document.getElementById('cat-breakdown').innerHTML = ev.catResults.map(cat => `
     <div class="cb-row ${cat.rag}">
       <div class="cb-rag ${cat.rag}"></div>
-      <div class="cb-name">${cat.name} <span style="font-size:11px;color:var(--kn-slate);font-family:var(--kn-mono)">(${cat.weight}%)</span></div>
+      <div class="cb-name">${cat.name} <span style="font-size:11px;color:var(--kn-ink-2);font-family:var(--kn-mono)">(${cat.weight}%)</span></div>
       <div class="cb-note">${cat.note || ''}</div>
       <div class="cb-score">${cat.score}</div>
     </div>`).join('');
@@ -1437,18 +1464,6 @@ function generateContract() {
   const slaRows = (slaMap[ev.fn] || slaMap.ops).map(([metric, target, remedy]) => 
     `<tr><td>${metric}</td><td>${target}</td><td>${remedy}</td></tr>`
   ).join('');
-
-  // Compliance commitments from evaluation
-  const gateQs = [];
-  if (ev.answers) {
-    Object.entries(ev.answers).forEach(([qId, ans]) => {
-      if (ans === 'yes') {
-        // Find the question
-        const allCats = [...(CORE_QUESTIONS[Object.keys(CORE_QUESTIONS)[0]] || [])];
-        // Simple: note compliance confirmations
-      }
-    });
-  }
 
   const contractHTML = `<!DOCTYPE html>
 <html>
@@ -1746,7 +1761,7 @@ Write only the narrative paragraph. No headers, no bullet points, no preamble.`;
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 1000,
       messages: [{ role: 'user', content: prompt }]
     })
